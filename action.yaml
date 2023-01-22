@@ -19,7 +19,7 @@ runs:
       with:
         python-version: '3.9'
         cache: 'pipenv'
-        cache-dependency-path: ./Pipfile.lock
+        cache-dependency-path: ./src/Pipfile.lock
 
     - name: Install pipenv
       run: |
