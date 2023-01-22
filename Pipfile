@@ -3,9 +3,17 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
 
+[dev-packages]
+flake8 = "~=3.8"
+flake8-isort = "~=3.0"
+coverage = "~=7.0"
+tblib = "~=1.7.0"
+parameterized = "~=0.7"
+mypy = "~=0.782"
+autopep8 = "*"
+pre-commit = "*"
+
 [packages]
 
-[dev-packages]
-
 [requires]
-python_version = "3.10"
+python_version = "3.9"
