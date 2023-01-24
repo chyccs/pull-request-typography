@@ -51,7 +51,7 @@ jobs:
         run: echo "${{ steps.get_square.outputs.num_squared }}"
 
       - run: |
-          gh pr edit ${{ github.event.pull_request.number }} --title ${{ steps.main.outputs.highlighted }}
+          gh pr edit ${{ github.event.pull_request.number }} --title "${{ steps.main.outputs.highlighted }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OWNER: ${{ github.repository_owner }}
