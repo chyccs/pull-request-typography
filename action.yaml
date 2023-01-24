@@ -47,10 +47,11 @@ runs:
 
     - name: Pass Inputs to Shell
       run: |
-        echo "INPUT_NUM=${{ inputs.num }}" >> $GITHUB_ENV
+        echo "words=${{ inputs.words }}" >> $GITHUB_ENV
+        echo "src_path=${{ inputs.src_path }}" >> $GITHUB_ENV
       shell: bash
     
     - name: Fetch the number's square
-      id: get-square
-      run: python src/get_num_square.py
+      id: main
+      run: python src/main.py
       shell: bash

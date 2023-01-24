@@ -16,15 +16,15 @@ jobs:
         run: echo '${{ toJSON(github) }}'
 
       - run: |
-          numOpenIssues="$(gh pr view ${{ github.event.pull_request.number }})"
-          echo 'NUM_OPEN_ISSUES='$numOpenIssues >> $GITHUB_ENV
+          pull_request="$(gh pr view ${{ github.event.pull_request.number }})"
+          echo 'TITLE='$pull_request.title >> $GITHUB_ENV
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OWNER: ${{ github.repository_owner }}
           REPO: ${{ github.event.repository.name }}
       
       - run: |
-          echo $NUM_OPEN_ISSUES
+          echo $TITLE
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
@@ -39,3 +39,10 @@ jobs:
 
       - name: Print the highlighted words
         run: echo "${{ steps.main.outputs.highlighted }}"
+
+      - run: |
+          gh pr edit ${{ github.event.pull_request.number }} --title ${{ steps.main.outputs.highlighted }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OWNER: ${{ github.repository_owner }}
+          REPO: ${{ github.event.repository.name }}
