@@ -4,7 +4,7 @@ on:
   pull_request:
 
 jobs:
-  get-num-square:
+  highlight:
     runs-on: ubuntu-latest
     name: Returns the number square
     steps:
@@ -29,7 +29,6 @@ jobs:
       #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Run main
-        id: main
         uses: ./ # Uses an action in the root directory
         # or use a released GitHub Action
         # uses: shipyard/github-action/fetch-shipyard-env@1.0.0
