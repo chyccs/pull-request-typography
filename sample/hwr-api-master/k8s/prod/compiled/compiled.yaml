@@ -1,0 +1,668 @@
+apiVersion: v1
+data:
+  ADMIN_INIT_SUPERVISOR_EMAIL: admin@mycompany.com
+  ADMIN_INIT_SUPERVISOR_ENABLED: "true"
+  ADMIN_INIT_SUPERVISOR_PASSWORD: admin
+  ADMIN_MAIL_SMTP_EMAIL: noreply-myscriptwebservices@mycompany.com
+  ADMIN_MAIL_SMTP_HOST: localhost
+  ADMIN_MAIL_SMTP_IGNOREERROR: "true"
+  ADMIN_MAIL_SMTP_PORT: "25"
+  ADMIN_SERVER_MONGOHOST: mongo
+  APP_ENV: prod
+  CELERY_BROKER_URL: redis://redis:6379/0
+  DEBUG: "False"
+  FLOWER_PORT: "8888"
+  HWR_API_BASE_URL: http://hwr-api-local
+  IINK_SERVER_KEY: 553f36e3-7d8f-4173-aafc-77e49b85850c
+  IINK_SERVER_MONGOHOST: mongo
+  IINK_SERVER_PORT: "8897"
+  IINK_SERVER_URL: http://iink-server:8897/api/v4.0/iink/batch
+  MONGODB_HOST: mongodb://ADMIN:Neoneoneo2022@GBD762D98E8DB80-HWRDATABASE.adb.ap-seoul-1.oraclecloudapps.com:27017/admin?authMechanism=PLAIN&authSource=$external&ssl=true&retryWrites=false&loadBalanced=true
+  MYSCRIPT_ADMIN_JVM_PARAMS: -Xmx1G -Djava.net.preferIPv4Stack=true -Djava.awt.headless=true
+  MYSCRIPT_ADMIN_LOGGER_LEVEL: DEBUG
+  MYSCRIPT_IINK_JVM_PARAMS: Xmx1G -Djava.net.preferIPv4Stack=true -Djava.awt.headless=true
+  MYSCRIPT_IINK_LOGGER_LEVEL: DEBUG
+  NDP_AUTH_BASE_URL: https://auth.neolab.net
+  NDP_CLIENT_ID: neolab_handwriting_recognition_service
+  NDP_CLIENT_SECRET: rJvjKalaywMmtw9luBCe5UFJRkfH1a9Y
+  NDP_INK_BASE_URL: https://ink.neolab.net
+  NDP_USER_BASE_URL: https://user.neolab.net
+  PORT: "8000"
+  RECOGNITION_HEALTH_CHECK_MINUTE: '*/60'
+  SENTRY_DSN: https://5d4f9e03d4054a818999e6d1aa571a23@o4504339503775744.ingest.sentry.io/4504339505479680
+  SENTRY_SAMPLING_IGNORE_PATH_LIST: /status,/,/docs/json/
+kind: ConfigMap
+metadata:
+  annotations: {}
+  labels: {}
+  name: base-config-72kg7b6db2
+  namespace: default
+---
+apiVersion: v1
+data:
+  nginx.conf: |
+    events {
+        worker_connections 1024;
+    }
+    http {
+        upstream django {
+            server localhost:8000;
+        }
+
+        server {
+            listen 80;
+
+            server_name hwr-analyzer hwr.neolab.net hwr-staging.neolab.net hwr-api-local;
+
+            client_max_body_size 3M;
+
+            location /static/ {
+                root /app;
+            }
+
+            location / {
+                proxy_pass http://django;
+                proxy_set_header Host $http_host;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-Forwarded-Proto http;
+            }
+
+            location = /ws {
+                proxy_pass http://django;
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection "upgrade";
+                proxy_set_header Host $host;
+            }
+        }
+
+        server {
+            listen 80 default_server;
+
+            server_name _;
+
+            location / {
+                return 404;
+            }
+
+            location = /health-check {
+                access_log off;
+                return 200;
+            }
+        }
+    }
+kind: ConfigMap
+metadata:
+  name: nginx-config-mf26ccgt44
+  namespace: default
+---
+apiVersion: v1
+data:
+  redis-config: |
+    maxmemory 20mb
+    maxmemory-policy allkeys-lru
+kind: ConfigMap
+metadata:
+  annotations:
+    alive: "true"
+  name: redis-config
+  namespace: default
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    oci.oraclecloud.com/load-balancer-type: lb
+    service.beta.kubernetes.io/oci-load-balancer-shape: flexible
+    service.beta.kubernetes.io/oci-load-balancer-shape-flex-max: "100"
+    service.beta.kubernetes.io/oci-load-balancer-shape-flex-min: "10"
+    service.beta.kubernetes.io/oci-load-balancer-ssl-ports: "8888"
+    service.beta.kubernetes.io/oci-load-balancer-tls-secret: merged
+  labels:
+    app: celery-flower
+  name: celery-flower-svc
+  namespace: default
+spec:
+  ports:
+  - port: 8888
+    protocol: TCP
+    targetPort: 8888
+  selector:
+    app: celery-flower
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: hwr-api
+  name: hwr-api-local
+  namespace: default
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: hwr-api
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    oci.oraclecloud.com/load-balancer-type: lb
+    service.beta.kubernetes.io/oci-load-balancer-shape: flexible
+    service.beta.kubernetes.io/oci-load-balancer-shape-flex-max: "100"
+    service.beta.kubernetes.io/oci-load-balancer-shape-flex-min: "10"
+    service.beta.kubernetes.io/oci-load-balancer-ssl-ports: "443"
+    service.beta.kubernetes.io/oci-load-balancer-tls-secret: merged
+  labels:
+    app: hwr-api
+  name: hwr-api-svc
+  namespace: default
+spec:
+  loadBalancerIP: 132.226.236.126
+  ports:
+  - port: 443
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: hwr-api
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: iink-admin-server
+  name: iink-admin-server
+  namespace: default
+spec:
+  ports:
+  - nodePort: 32731
+    port: 8895
+    protocol: TCP
+    targetPort: 8895
+  selector:
+    app: iink-server
+  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: iink-server
+  name: iink-server
+  namespace: default
+spec:
+  ports:
+  - nodePort: 32734
+    port: 8897
+    protocol: TCP
+    targetPort: 8897
+  selector:
+    app: iink-server
+  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: mongo
+  name: mongo
+  namespace: default
+spec:
+  ports:
+  - nodePort: 32000
+    port: 27017
+    protocol: TCP
+    targetPort: 27017
+  selector:
+    app: mongo
+  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    alive: "true"
+  labels:
+    app: redis
+  name: redis
+  namespace: default
+spec:
+  ports:
+  - name: redis
+    port: 6379
+    protocol: TCP
+    targetPort: 6379
+  selector:
+    app: redis
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    alive: "true"
+  labels:
+    app: celery-flower
+  name: celery-flower
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: celery-flower
+  template:
+    metadata:
+      annotations:
+        cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
+      labels:
+        app: celery-flower
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: base-config-72kg7b6db2
+        image: mher/flower
+        imagePullPolicy: IfNotPresent
+        name: celery-flower
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    alive: "true"
+  labels:
+    app: celery-worker
+  name: celery-worker
+  namespace: default
+spec:
+  minReadySeconds: 1
+  progressDeadlineSeconds: 600
+  replicas: 3
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: celery-worker
+  template:
+    metadata:
+      annotations:
+        cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
+      labels:
+        app: celery-worker
+    spec:
+      containers:
+      - command:
+        - /bin/sh
+        - -c
+        - python -c "import uuid; print(str(uuid.uuid4()))" > /tmp/uuid && celery
+          --workdir hwr_analyzer -A hwr_analyzer worker -l info --concurrency=2 -Ofair
+          --prefetch-multiplier=1 -n `cat /tmp/uuid`
+        envFrom:
+        - configMapRef:
+            name: base-config-72kg7b6db2
+        image: icn.ocir.io/cnlkg4dnisfp/hwr-analyzer:prod-273
+        imagePullPolicy: Always
+        lifecycle:
+          preStop:
+            exec:
+              command:
+              - /bin/sh
+              - -c
+              - celery --workdir hwr_analyzer -A hwr_analyzer control shutdown --destination=celery@`cat
+                /tmp/uuid`
+        name: celery-worker
+      restartPolicy: Always
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    alive: "true"
+  labels:
+    app: hwr-api
+  name: hwr-api
+  namespace: default
+spec:
+  minReadySeconds: 30
+  replicas: 3
+  selector:
+    matchLabels:
+      app: hwr-api
+  strategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 50%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: hwr-api
+    spec:
+      containers:
+      - command:
+        - /bin/sh
+        - -c
+        - /docker-entrypoint.sh
+        envFrom:
+        - configMapRef:
+            name: base-config-72kg7b6db2
+        image: icn.ocir.io/cnlkg4dnisfp/hwr-analyzer:prod-273
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 5
+          httpGet:
+            path: /status
+            port: gunicorn
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 15
+          successThreshold: 1
+          timeoutSeconds: 30
+        name: hwr-api
+        ports:
+        - containerPort: 8000
+          name: gunicorn
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /status
+            port: gunicorn
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 5
+        volumeMounts:
+        - mountPath: /app/static/
+          name: app-sock
+      - command:
+        - /bin/sh
+        - -c
+        - nginx -g 'daemon off;'
+        image: nginx:stable
+        imagePullPolicy: IfNotPresent
+        lifecycle:
+          postStart:
+            exec:
+              command:
+              - /bin/sh
+              - -c
+              - echo Hello from the postStart handler > /usr/share/message
+          preStop:
+            exec:
+              command:
+              - /bin/sh
+              - -c
+              - nginx -s quit; while kill -0 1; do sleep 1; done
+        livenessProbe:
+          failureThreshold: 5
+          httpGet:
+            path: /health-check
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 15
+          successThreshold: 1
+          timeoutSeconds: 30
+        name: nginx
+        ports:
+        - containerPort: 80
+          name: http
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /health-check
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 5
+        volumeMounts:
+        - mountPath: /app/static/
+          name: app-sock
+        - mountPath: /etc/nginx/nginx.conf
+          name: nginx-conf
+          readOnly: true
+          subPath: nginx.conf
+      volumes:
+      - emptyDir: {}
+        name: app-sock
+      - configMap:
+          name: nginx-config-mf26ccgt44
+        name: nginx-conf
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: iink-admin-server
+  name: iink-admin-server
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: iink-admin-server
+  template:
+    metadata:
+      labels:
+        app: iink-admin-server
+    spec:
+      containers:
+      - command:
+        - /bin/sh
+        - -c
+        - /entrypoint.sh
+        envFrom:
+        - configMapRef:
+            name: base-config-72kg7b6db2
+        image: icn.ocir.io/cnlkg4dnisfp/myscript-admin-server:myscript-server-1.5.1-iink
+        imagePullPolicy: IfNotPresent
+        name: iink-server
+        volumeMounts:
+        - mountPath: /tmp
+          name: temp
+      volumes:
+      - emptyDir: {}
+        name: temp
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: iink-server
+  name: iink-server
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: iink-server
+  template:
+    metadata:
+      labels:
+        app: iink-server
+    spec:
+      containers:
+      - command:
+        - /bin/sh
+        - -c
+        - /entrypoint.sh
+        envFrom:
+        - configMapRef:
+            name: base-config-72kg7b6db2
+        image: icn.ocir.io/cnlkg4dnisfp/myscript-iink-server:myscript-server-1.5.1-iink
+        imagePullPolicy: Always
+        name: iink-server
+        volumeMounts:
+        - mountPath: /var/lib/myscript-iink-server/licenseKey
+          name: myscript
+          readOnly: true
+          subPath: licenseKey
+        - mountPath: /var/lib/myscript-iink-server/fonts
+          name: myscript
+          readOnly: true
+          subPath: fonts
+        - mountPath: /var/lib/myscript-iink-server/resources
+          name: myscript
+          readOnly: true
+          subPath: resources
+        - mountPath: /tmp
+          name: temp
+      nodeSelector:
+        app: iink-server
+      volumes:
+      - name: myscript
+        persistentVolumeClaim:
+          claimName: oke-fss-pvc
+      - emptyDir: {}
+        name: temp
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mongo
+  name: mongo
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:
+      containers:
+      - args:
+        - --dbpath
+        - /data/db
+        image: mongo:4.4
+        name: mongo
+        volumeMounts:
+        - mountPath: /data/db
+          name: mongo-data
+      volumes:
+      - emptyDir: {}
+        name: mongo-data
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    alive: "true"
+  labels:
+    app: redis
+  name: redis
+  namespace: default
+spec:
+  minReadySeconds: 30
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  strategy:
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 35%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - command:
+        - redis-server
+        - /redis-master/redis.conf
+        env:
+        - name: MASTER
+          value: "true"
+        image: redis:latest
+        imagePullPolicy: Always
+        name: redis
+        ports:
+        - containerPort: 6379
+          name: redis
+        volumeMounts:
+        - mountPath: /redis-master-data
+          name: data
+        - mountPath: /redis-master
+          name: config
+      volumes:
+      - emptyDir: {}
+        name: data
+      - configMap:
+          items:
+          - key: redis-config
+            path: redis.conf
+          name: redis-config
+        name: config
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: celery-beat
+  name: celery-beat
+  namespace: default
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: celery-beat
+  serviceName: celery-beat
+  template:
+    metadata:
+      annotations:
+        cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
+      labels:
+        app: celery-beat
+    spec:
+      containers:
+      - command:
+        - /bin/sh
+        - -c
+        - celery --workdir hwr_analyzer -A hwr_analyzer beat -l info
+        envFrom:
+        - configMapRef:
+            name: base-config-72kg7b6db2
+        image: icn.ocir.io/cnlkg4dnisfp/hwr-analyzer:prod-273
+        imagePullPolicy: IfNotPresent
+        name: celery-beat
+        resources:
+          limits:
+            cpu: 200m
+            memory: 300Mi
+          requests:
+            cpu: 200m
+            memory: 300Mi
+---
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: hwr-api
+  namespace: default
+spec:
+  maxReplicas: 6
+  metrics:
+  - resource:
+      name: cpu
+      target:
+        averageUtilization: 35
+        type: Utilization
+    type: Resource
+  minReplicas: 2
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: hwr-api

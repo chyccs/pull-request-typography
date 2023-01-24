@@ -10,12 +10,32 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Fetch num squared
-        id: get_square
+        
+      - name: Dump GitHub context
+        id: github_context_step
+        run: echo '${{ toJSON(github) }}'
+
+      - run: |
+          numOpenIssues="$(gh pr view)"
+          echo 'NUM_OPEN_ISSUES='$numOpenIssues >> $GITHUB_ENV
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OWNER: ${{ github.repository_owner }}
+          REPO: ${{ github.event.repository.name }}
+      
+      - run: |
+          echo $NUM_OPEN_ISSUES
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Run main
+        id: main
         uses: ./ # Uses an action in the root directory
         # or use a released GitHub Action
         # uses: shipyard/github-action/fetch-shipyard-env@1.0.0
         with:
-          num: 11
-      - name: Print the square
-        run: echo "${{ steps.get_square.outputs.files }}"
+          words: Bump sentry-sdk from 1.13.0 to 1.14.0
+          src_path: ./sample
+
+      - name: Print the highlighted words
+        run: echo "${{ steps.main.outputs.highlighted }}"

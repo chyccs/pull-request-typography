@@ -1,0 +1,78 @@
+name: 'kustomize'
+
+on:
+  workflow_call:
+    inputs:
+      ref:
+        required: true
+        type: string
+      ref_name:
+        required: true
+        type: string
+      new_tag:
+        required: false
+        type: string
+
+env:
+  kustomize_version: '3.5.2'
+
+jobs:
+  kustomize:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+    permissions:
+      pull-requests: write
+      actions: write
+      checks: write
+      contents: write
+      statuses: write
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: master
+          fetch-depth: 3
+
+      - name: Update kustomization.yaml
+        if: ${{ inputs.new_tag != null }}
+        run: |
+          git pull
+          sed -i 's/newTag\:[ A-Za-z0-9_-]*/newTag\: ${{ inputs.new_tag }}/g' ./k8s/${{ inputs.ref_name }}/kustomization.yaml
+
+      - id: cache-kustomize
+        name: Cache kustomize
+        uses: actions/cache@v3
+        with:
+          path: ~/.kustomize
+          key: 'kustomize-${{ env.kustomize_version }}'
+
+      - name: Download kustomize
+        if: steps.cache-kustomize.outputs.cache-hit != 'true'
+        run: |
+          wget https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv${{ env.kustomize_version }}/kustomize_v${{ env.kustomize_version }}_linux_amd64.tar.gz
+          mkdir ~/.kustomize
+          sudo tar -xzvf kustomize_v${{ env.kustomize_version }}_linux_amd64.tar.gz -C ~/.kustomize
+          rm -rf kustomize_v${{ env.kustomize_version }}_linux_amd64.tar.gz
+
+      - name: Install kustomize
+        run: |
+          sudo ln -s ~/.kustomize/kustomize /usr/bin/kustomize
+          sudo chmod +x ~/.kustomize/kustomize
+          sudo chmod +x /usr/bin/kustomize
+
+      - name: Build
+        timeout-minutes: 2
+        run: |
+          /usr/bin/kustomize build ./k8s/master -o ./k8s/master/compiled/compiled.yaml
+          /usr/bin/kustomize build ./k8s/prod -o ./k8s/prod/compiled/compiled.yaml
+
+      - name: Update compiled.yaml
+        run: |
+          git add .
+          changes="$(git diff --name-status | awk '$1 == "M" { print $2 }')"
+          git config --local user.email "neolab"
+          git config --local user.name "neolab"
+          git commit -m "Update `kustomize` `compiled.yaml`\n$changes"
+          git push
+        env:
+          GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_ACCESS_TOKEN }}

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: oke-fss-pv
+spec:
+  capacity:
+    storage: 50Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  csi:
+    driver: fss.csi.oraclecloud.com
+    volumeHandle: ocid1.filesystem.oc1.ap_seoul_1.aaaaaaaaaaac6p2hnfrw4llqojxwiotboawxgzlpovwc2mjnmfsc2mia:10.0.10.6:/FileSystem-20221012-0854-36

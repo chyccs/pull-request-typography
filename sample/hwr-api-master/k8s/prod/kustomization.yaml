@@ -1,0 +1,18 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+bases:
+- ../base
+patchesStrategicMerge:
+- hwr-api-service.yaml
+- hwr-api-deployment.yaml
+- iink-server-deployment.yaml
+- celery-deployment.yaml
+configMapGenerator:
+- name: base-config
+  behavior: merge
+  envs:
+  - config.env
+namespace: default
+images:
+- name: icn.ocir.io/cnlkg4dnisfp/hwr-analyzer
+  newTag: prod-273

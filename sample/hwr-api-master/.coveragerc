@@ -1,0 +1,21 @@
+[run]
+omit =
+    hwr_analyzer/hwr_analyzer/*.py
+    hwr_analyzer/hwr_analyzer/**/*.py
+    hwr_analyzer/services/restful/views/user_notes.py
+    hwr_analyzer/services/restful/views/user_pages.py
+    hwr_analyzer/manage.py
+    hwr_analyzer/serializer.py
+    hwr_analyzer/domain/recognizer/models/raw_content.py
+    hwr_analyzer/utils/testcases/assertion.py
+    hwr_analyzer/domain/analyzer/models/*.py
+    hwr_analyzer/services/restful/documents/authentication.py
+    __init__.py
+    *.yml
+    *.yaml
+    *.sh
+    .*
+    *.md
+    *.toml
+    Dockerfile
+    Dockerfile.celery

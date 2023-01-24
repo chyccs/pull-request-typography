@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: celery-worker
+  labels:
+    app: celery-worker
+  annotations:
+    alive: "true"
+spec:
+  replicas: 1
+  minReadySeconds: 1
+  progressDeadlineSeconds: 600
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: celery-worker
+  template:
+    metadata:
+      labels:
+        app: celery-worker
+      annotations:
+        cluster-autoscaler.kubernetes.io/safe-to-evict: "false"
+    spec:
+      containers:
+      - name: celery-worker
+        image: icn.ocir.io/cnlkg4dnisfp/hwr-analyzer
+        imagePullPolicy: IfNotPresent
+        command:
+        - /bin/sh
+        - -c
+        - python -c "import uuid; print(str(uuid.uuid4()))" > /tmp/uuid && celery --workdir hwr_analyzer -A hwr_analyzer worker -l info --concurrency=2 -Ofair --prefetch-multiplier=1 -n `cat /tmp/uuid`
+        envFrom:
+          - configMapRef:
+              name: base-config
+        lifecycle:
+          preStop:
+            exec:
+              command:
+              - /bin/sh
+              - -c
+              - celery --workdir hwr_analyzer -A hwr_analyzer control shutdown --destination=celery@`cat /tmp/uuid`
+      restartPolicy: Always

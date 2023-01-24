@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iink-server
+  labels:
+    app: iink-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: iink-server
+  template:
+    metadata:
+      labels:
+        app: iink-server
+    spec:
+      nodeSelector:
+        app: iink-server
+      containers:
+      - name: iink-server
+        image: icn.ocir.io/cnlkg4dnisfp/myscript-iink-server:myscript-server-1.5.1-iink
+        imagePullPolicy: Always
+        # resources:
+        #   requests:
+        #     cpu: "1000m"
+        #   limits:
+        #     cpu: "2000m"
+        volumeMounts:
+          - name: myscript
+            mountPath: /var/lib/myscript-iink-server/licenseKey
+            subPath: licenseKey
+            readOnly: true
+          - name: myscript
+            mountPath: /var/lib/myscript-iink-server/fonts
+            subPath: fonts
+            readOnly: true
+          - name: myscript
+            mountPath: /var/lib/myscript-iink-server/resources
+            subPath: resources
+            readOnly: true
+          - name: temp
+            mountPath: /tmp
+        envFrom:
+          - configMapRef:
+              name: base-config
+        command:
+        - /bin/sh
+        - -c
+        - /entrypoint.sh
+      volumes:
+        - name: myscript
+          persistentVolumeClaim:
+            claimName: oke-fss-pvc
+        - name: temp
+          emptyDir: {}

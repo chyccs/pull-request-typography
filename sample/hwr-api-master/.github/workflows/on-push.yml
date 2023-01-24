@@ -1,0 +1,59 @@
+name: 'on-push-action'
+
+on:
+  push:
+    branches:
+      - master
+      - prod
+
+concurrency:
+  group: ${{ github.ref_name }}
+
+
+jobs:
+  preparing:
+    runs-on: ubuntu-latest
+    outputs:
+      changes: ${{ steps.step-changes.outputs.changes }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref}}
+          fetch-depth: 2
+
+      - id: step-changes
+        run: |
+          changes="$(git diff HEAD~1 HEAD --name-only | grep -E "Dockerfile|Pipfile|.html$|.py" | wc -l)"
+          echo "changes=$changes" >> $GITHUB_OUTPUT
+
+  integration:
+    uses: NeoSmartpen/hwr-api/.github/workflows/django.yml@master
+    needs: preparing
+    if: ${{ needs.preparing.outputs.changes >= 1 }}
+    with:
+      ref: ${{ github.ref }}
+      base_ref: ${{ github.ref_name }}
+
+  delivery:
+    uses: NeoSmartpen/hwr-api/.github/workflows/delivery.yml@master
+    needs: integration
+    with:
+      ref: ${{ github.ref }}
+      ref_name: ${{ github.ref_name }}
+      new_tag: '${{ github.ref_name }}-${{ github.run_number }}'
+
+  trigger-deploy:
+    uses: NeoSmartpen/hwr-api/.github/workflows/kustomize.yml@master
+    needs: delivery
+    with:
+      ref: ${{ github.ref }}
+      ref_name: ${{ github.ref_name }}
+      new_tag: '${{ github.ref_name }}-${{ github.run_number }}'
+
+  trigger-deploy-only:
+    uses: NeoSmartpen/hwr-api/.github/workflows/kustomize.yml@master
+    needs: preparing
+    if: ${{ needs.preparing.outputs.changes == 0 }}
+    with:
+      ref: ${{ github.ref }}
+      ref_name: ${{ github.ref_name }}
