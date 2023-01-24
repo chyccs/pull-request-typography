@@ -43,6 +43,7 @@ runs:
       if: steps.cache-pipenv.outputs.cache-hit != 'true'
       run: |
         pipenv install --dev
+        pipenv graph
       shell: bash
 
     - name: Pass Inputs to Shell
@@ -51,7 +52,7 @@ runs:
         echo "src_path=${{ inputs.src_path }}" >> $GITHUB_ENV
       shell: bash
     
-    - name: Fetch the number's square
+    - name: Run main
       id: main
       run: python src/main.py
       shell: bash

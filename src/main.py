@@ -6,8 +6,8 @@ import keyword
 
 
 def main():
-    words = environ.get("words")
-    src_path = environ.get("src_path")
+    words = environ.get("words", default='fix invalid character and Stroke Module')
+    src_path = environ.get("src_path", default='sample/')
     stopwords = environ.get("stopwords", default=[])
     
     texts = {}
