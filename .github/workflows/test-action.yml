@@ -48,7 +48,7 @@ jobs:
         run: echo "${{ steps.main.outputs.highlighted }}"
 
       - run: |
-          gh pr edit ${{ github.event.pull_request.number }} --title "${{ steps.main.outputs.highlighted }}"
+          gh pr edit ${{ github.event.pull_request.number }} --title '${{ steps.main.outputs.highlighted }}'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OWNER: ${{ github.repository_owner }}
