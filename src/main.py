@@ -39,7 +39,7 @@ def main():
         
     th = TextHighlighter(max_ngram_size = 2, highlight_pre = "`", highlight_post= "`")
     highlighted = th.highlight(words, keywords)
-
+    print(highlighted)
     print(f"::set-output name=highlighted::{highlighted}")
 
 if __name__ == "__main__":
