@@ -54,5 +54,5 @@ runs:
     
     - name: Run main
       id: main
-      run: pipenv run python src/main.py
+      run: pipenv run python src/main.py >> $GITHUB_OUTPUT
       shell: bash

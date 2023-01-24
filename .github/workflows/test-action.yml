@@ -41,6 +41,9 @@ jobs:
 
       - name: Print the highlighted words
         run: echo "${{ steps.main.outputs.highlighted }}"
+        
+      - name: Print the square
+        run: echo "${{ steps.get_square.outputs.num_squared }}"
 
       - run: |
           gh pr edit ${{ github.event.pull_request.number }} --title ${{ steps.main.outputs.highlighted }}
