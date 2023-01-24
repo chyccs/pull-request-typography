@@ -54,5 +54,5 @@ runs:
     
     - name: Run main
       id: main
-      run: python src/main.py
+      run: pipenv run src/main.py
       shell: bash
