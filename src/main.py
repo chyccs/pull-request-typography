@@ -34,8 +34,8 @@ def main():
     keywords = kw_extractor.extract_keywords(text)
     keywords = sorted(keywords, key=lambda x: x[1], reverse=True)
     
-    for kw, v in keywords:
-        print("yake: ",kw, "/ score", v)
+    # for kw, v in keywords:
+    #     print("yake: ",kw, "/ score", v)
         
     th = TextHighlighter(max_ngram_size = 2, highlight_pre = "\`", highlight_post= "\`")
     highlighted = th.highlight(words, keywords)
