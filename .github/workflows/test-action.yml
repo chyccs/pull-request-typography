@@ -3,6 +3,11 @@ name: Test Action
 on:
   pull_request:
 
+permissions:
+  contents: write
+  issues: write
+  pull-requests: writee
+
 jobs:
   highlight:
     runs-on: ubuntu-latest
@@ -41,7 +46,7 @@ jobs:
 
       - name: Print the highlighted words
         run: echo "${{ steps.main.outputs.highlighted }}"
-        
+
       - name: Print the square
         run: echo "${{ steps.get_square.outputs.num_squared }}"
 
