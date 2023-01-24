@@ -37,7 +37,7 @@ def main():
     for kw, v in keywords:
         print("yake: ",kw, "/ score", v)
         
-    th = TextHighlighter(max_ngram_size = 2, highlight_pre = "`", highlight_post= "`")
+    th = TextHighlighter(max_ngram_size = 2, highlight_pre = "\`", highlight_post= "\`")
     highlighted = th.highlight(words, keywords)
     print(highlighted)
     print(f"::set-output name=highlighted::{highlighted}")
