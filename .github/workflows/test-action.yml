@@ -16,15 +16,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      # - name: Dump GitHub context
-      #   id: github_context_step
-      #   run: echo '${{ toJSON(github) }}'
-
       - name: Run main
         id: main
-        uses: ./ # Uses an action in the root directory
+        # uses: ./ # Uses an action in the root directory
         # or use a released GitHub Action
-        # uses: shipyard/github-action/fetch-shipyard-env@1.0.0
+        uses: chyccs/keyword-emphasizer@(feat)applied-sample
         with:
           src_path: ./sample
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
