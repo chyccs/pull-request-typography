@@ -19,6 +19,11 @@ runs:
     - name: Checkout
       uses: actions/checkout@v2
 
+    - name: Move to path of action
+      run: |
+        cd ${{ github.action_path }} 
+      shell: bash
+
     - name: Install Python
       uses: actions/setup-python@v4
       with:
