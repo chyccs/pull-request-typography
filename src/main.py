@@ -45,13 +45,19 @@ def main():
     stopwords = environ.get("stopwords", default=[])
 
     texts = {}
-
-    for x in walk(src_path):
-        for y in glob.glob(path.join(x[0], '*')):
-            if not y.startswith('./.venv'):
-                file = open(y, "r")
-                strings = file.readlines()
-                texts[y] = '\n'.join(strings)
+    for root, d_names, f_names in os.walk(src_path):
+        for f in f_names:
+            file_path = os.path.join(root, f)
+            file = open(file_path, "r")
+            strings = file.readlines()
+            texts[file_path] = '\n'.join(strings)
+                
+    # for x in walk(src_path):
+    #     for y in glob.glob(path.join(x[0], '*.*')):
+    #         if not y.startswith('./.venv'):
+    #             file = open(y, "r")
+    #             strings = file.readlines()
+    #             texts[y] = '\n'.join(strings)
 
     text = '\n\n\n'.join(texts.values())
     stopwords.extend(['cls.', 'self.'])
