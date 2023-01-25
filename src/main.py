@@ -31,7 +31,7 @@ TAG = [
 def main():
     owner = os.environ['owner']
     repo = os.environ['repository']
-    pull_request_num = os.environ['pull_request_number']
+    pull_request_num = int(os.environ['pull_request_number'])
     token = os.environ['access_token']
     src_path = os.environ['src_path']
 
