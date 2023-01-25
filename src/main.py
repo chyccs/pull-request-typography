@@ -5,12 +5,18 @@ import yake
 from yake.highlight import TextHighlighter
 import keyword
 
+from services import get_github_repo, get_pull_request, update_pull_request
+
 
 def main():
-    title = environ.get('title')
-    body = environ.get('body')
-    print(title)
-    print(body)
+    repository_name = os.environ['repository_name']
+    pull_request_number = os.environ['pull_request_number']
+    access_token = os.environ['access_token']
+    pull_request = get_pull_request(
+        repo=get_github_repo(access_token=access_token, repository_name=repository_name), 
+        number=pull_request_number,
+    )
+    
     src_path = environ.get("src_path", default='sample/')
     stopwords = environ.get("stopwords", default=[])
     
@@ -46,16 +52,12 @@ def main():
         highlight_pre = "`", 
         highlight_post= "`",
     )
-    decorated_title = th.highlight(title, keywords)
-    decorated_body = th.highlight(body, keywords)
-    # print(f"::set-output name=title::{decorated_title}")
-    # print(f"::set-output name=body::{decorated_body}")
 
-    output_file = os.getenv('GITHUB_OUTPUT')
+    decorated_title = th.highlight(pull_request.title, keywords)
+    decorated_body = th.highlight(pull_request.body, keywords)
 
-    with open(output_file, "a") as output:
-        output.write(f"title={decorated_title}\n")
-        output.write(f"body={decorated_body}")
-    
+    update_pull_request(pull_request=pull_request, title=decorated_title, body=decorated_body)
+
+
 if __name__ == "__main__":
 	main()

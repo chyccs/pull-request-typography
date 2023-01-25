@@ -54,14 +54,6 @@ runs:
       run: pipenv run python src/main.py
       shell: bash
       env:
-        title: "${{ github.event.pull_request.title }}"
-        body: "${{ github.event.pull_request.body }}"
-        src_path: "${{ inputs.src_path }}"
-
-    - run: |
-        gh pr edit ${{ github.event.pull_request.number }} --title '${{ steps.main.outputs.title }}' --body '${{ steps.main.outputs.body }}'
-      shell: bash
-      env:
-        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
-        OWNER: ${{ github.repository_owner }}
-        REPO: ${{ github.event.repository.name }}
+        repository_name: "${{ github.event.repository.name }}"
+        pull_request_number: "${{ github.event.pull_request.number }}"
+        access_token: "${{ inputs.GITHUB_TOKEN }}"
