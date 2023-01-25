@@ -17,9 +17,10 @@ def main():
     owner = os.environ['owner']
     repository = os.environ['repository']
     pull_request_number = os.environ['pull_request_number']
-    access_token = os.environ['access_token']
+    token = os.environ['access_token']
+    
     pull_request = fetch_pull_request(
-        access_token=access_token,
+        access_token=token,
         owner=owner,
         repository=repository,
         number=int(pull_request_number),
@@ -52,8 +53,8 @@ def main():
     keywords = kw_extractor.extract_keywords(text)
     keywords = sorted(keywords, key=lambda x: x[1], reverse=True)
 
-    for kw, v in keywords:
-        print("yake: ", kw, "/ score", v)
+    # for kw, v in keywords:
+    #     print("yake: ", kw, "/ score", v)
 
     th = TextHighlighter(
         max_ngram_size=3,
