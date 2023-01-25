@@ -55,6 +55,6 @@ runs:
       shell: bash
       env:
         owner: ${{ github.repository_owner }}
-        repository_name: "${{ github.event.repository.name }}"
+        repository: "${{ github.event.repository.name }}"
         pull_request_number: "${{ github.event.pull_request.number }}"
         access_token: "${{ inputs.GITHUB_TOKEN }}"

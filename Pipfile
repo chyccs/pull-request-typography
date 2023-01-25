@@ -4,6 +4,12 @@ verify_ssl = true
 name = "pypi"
 
 [dev-packages]
+flake8 = "~=3.8"
+flake8-isort = "~=3.0"
+coverage = "~=7.0"
+mypy = "~=0.782"
+autopep8 = "*"
+pre-commit = "*"
 
 [packages]
 yake = "==0.4.8"

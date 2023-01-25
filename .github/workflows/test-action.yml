@@ -28,4 +28,3 @@ jobs:
         with:
           src_path: ./sample
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
