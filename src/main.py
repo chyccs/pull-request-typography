@@ -47,7 +47,9 @@ def main():
     texts = {}
     for root, d_names, f_names in os.walk(src_path):
         for f in f_names:
+            print(f)
             file_path = os.path.join(root, f)
+            print(file_path)
             file = open(file_path, "r")
             strings = file.readlines()
             texts[file_path] = '\n'.join(strings)
