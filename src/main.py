@@ -14,6 +14,21 @@ from yake.highlight import TextHighlighter
 from services import fetch_pull_request
 
 
+TAG = [
+  'build',
+  'chore',
+  'ci',
+  'docs',
+  'feat',
+  'fix',
+  'perf',
+  'refactor',
+  'revert',
+  'style',
+  'test',
+]
+
+
 def main():
     owner = os.environ['owner']
     repository = os.environ['repository']
@@ -63,17 +78,17 @@ def main():
         highlight_post="`",
     )
     
-    p = re.search('(.*)\((.*)\)(.*)', pull_request.title)
-    print(p.group(1))
-    print(p.group(2))
-    print(p.group(3))
-    plain_title=f'{p.group(1)}{p.group(3)}'
-
-    decorated_title = th.highlight(plain_title, keywords)
+    if not pull_request.title.find(':'):
+        p = re.search('(.*)\((.*)\)(.*)', pull_request.title)
+        decorated_title = th.highlight(f'{p.group(1)}{p.group(3)}', keywords)
+        decorated_title = f'{p.group(2)}: {decorated_title.lower()}'
+    else:
+        decorated_title = th.highlight(pull_request.title, keywords)
+        
     decorated_body = th.highlight(pull_request.body, keywords)
 
     pull_request.edit(
-        title=f'{p.group(2)}: {decorated_title.lower()}',
+        title=decorated_title,
         body=decorated_body,
     )
 
