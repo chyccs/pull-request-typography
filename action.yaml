@@ -52,3 +52,4 @@ runs:
         repository: ${{ github.event.repository.name }}
         pull_request_number: ${{ github.event.pull_request.number }}
         access_token: ${{ inputs.GITHUB_TOKEN }}
+        src_path: ${{ inputs.src_path }}
