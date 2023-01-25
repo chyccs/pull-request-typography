@@ -53,6 +53,7 @@ runs:
       run: |
         echo "title=${{ github.event.pull_request.title }}" >> $GITHUB_ENV
         body="${{ github.event.pull_request.body }}"
+        echo $body
         echo "body=$body" >> $GITHUB_ENV
         echo "src_path=${{ inputs.src_path }}" >> $GITHUB_ENV
         
