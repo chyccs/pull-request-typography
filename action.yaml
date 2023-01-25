@@ -9,7 +9,7 @@ inputs:
     default: "."
 
   GITHUB_TOKEN:
-    description: 'Path of source code'
+    description: 'Github Token'
     required: true
     default: "."
 
