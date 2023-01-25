@@ -15,7 +15,7 @@ def main():
     access_token = os.environ['access_token']
     pull_request = get_pull_request(
         repo=get_github_repo(access_token=access_token, user=owner, repository_name=repository_name), 
-        number=pull_request_number,
+        number=int(pull_request_number),
     )
     
     src_path = environ.get("src_path", default='sample/')
