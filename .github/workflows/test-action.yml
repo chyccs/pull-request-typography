@@ -29,7 +29,3 @@ jobs:
           src_path: ./sample
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Print the highlighted result
-        run: |
-          echo "${{ steps.main.outputs.title }}"
-          echo "${{ steps.main.outputs.body }}"

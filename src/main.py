@@ -9,11 +9,12 @@ from services import get_github_repo, get_pull_request, update_pull_request
 
 
 def main():
+    owner = os.environ['owner']
     repository_name = os.environ['repository_name']
     pull_request_number = os.environ['pull_request_number']
     access_token = os.environ['access_token']
     pull_request = get_pull_request(
-        repo=get_github_repo(access_token=access_token, repository_name=repository_name), 
+        repo=get_github_repo(access_token=access_token, user=owner, repository_name=repository_name), 
         number=pull_request_number,
     )
     
