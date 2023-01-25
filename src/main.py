@@ -8,6 +8,8 @@ import keyword
 def main():
     title = environ.get('title')
     body = environ.get('body')
+    print(title)
+    print(body)
     src_path = environ.get("src_path", default='sample/')
     stopwords = environ.get("stopwords", default=[])
     
