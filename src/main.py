@@ -45,14 +45,15 @@ def main():
     stopwords = environ.get("stopwords", default=[])
 
     texts = {}
-    for root, d_names, f_names in os.walk(src_path):
+    for root, _, f_names in os.walk(src_path):
         for f in f_names:
-            print(f)
             file_path = os.path.join(root, f)
-            print(file_path)
-            file = open(file_path, "r")
-            strings = file.readlines()
-            texts[file_path] = '\n'.join(strings)
+            try:
+                file = open(file_path, "r")
+                strings = file.readlines()
+                texts[file_path] = '\n'.join(strings)
+            except UnicodeDecodeError as decode_err:
+                pass
                 
     # for x in walk(src_path):
     #     for y in glob.glob(path.join(x[0], '*.*')):
