@@ -20,7 +20,7 @@ jobs:
         id: main
         # uses: ./ # Uses an action in the root directory
         # or use a released GitHub Action
-        uses: chyccs/keyword-emphasizer@(feat)applied-sample
+        uses: chyccs/keyword-emphasizer@master
         with:
           src_path: ./sample
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
