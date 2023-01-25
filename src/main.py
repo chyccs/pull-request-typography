@@ -6,6 +6,7 @@ from os import (
     path,
     walk,
 )
+import re
 
 import yake
 from yake.highlight import TextHighlighter
@@ -61,11 +62,18 @@ def main():
         highlight_pre="`",
         highlight_post="`",
     )
+    
+    p = re.search('(.*)((.*))(.*)/g', pull_request.title)
+    
+    plain_title=f'{p.group(0)}{p.group(2)}'
 
-    decorated_title = th.highlight(pull_request.title, keywords)
+    decorated_title = th.highlight(plain_title, keywords)
     decorated_body = th.highlight(pull_request.body, keywords)
 
-    pull_request.edit(title=decorated_title, body=decorated_body)
+    pull_request.edit(
+        title=f'{p.group(1)}{decorated_title}',
+        body=decorated_body,
+    )
 
 
 if __name__ == "__main__":
