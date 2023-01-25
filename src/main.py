@@ -78,7 +78,7 @@ def main():
         highlight_post="`",
     )
     
-    if not pull_request.title.find(':'):
+    if  pull_request.title.find(':') < 0:
         p = re.search('(.*)\((.*)\)(.*)', pull_request.title)
         decorated_title = th.highlight(f'{p.group(1)}{p.group(3)}', keywords)
         tag = p.group(2).strip()
