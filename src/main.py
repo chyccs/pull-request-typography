@@ -64,14 +64,16 @@ def main():
     )
     
     p = re.search('(.*)((.*))(.*)', pull_request.title)
-    print(p)
-    plain_title=f'{p.group(0)}{p.group(2)}'
+    print(p.group(1))
+    print(p.group(2))
+    print(p.group(3))
+    plain_title=f'{p.group(1)}{p.group(3)}'
 
     decorated_title = th.highlight(plain_title, keywords)
     decorated_body = th.highlight(pull_request.body, keywords)
 
     pull_request.edit(
-        title=f'{p.group(1)}{decorated_title}',
+        title=f'{p.group(2)}{decorated_title}',
         body=decorated_body,
     )
 
