@@ -1,12 +1,7 @@
-import glob
 import keyword
 import os
 import re
-from os import (
-    environ,
-    path,
-    walk,
-)
+from os import environ
 
 import yake
 from yake.highlight import TextHighlighter
@@ -54,13 +49,6 @@ def main():
                 texts[file_path] = '\n'.join(strings)
             except UnicodeDecodeError as decode_err:
                 pass
-                
-    # for x in walk(src_path):
-    #     for y in glob.glob(path.join(x[0], '*.*')):
-    #         if not y.startswith('./.venv'):
-    #             file = open(y, "r")
-    #             strings = file.readlines()
-    #             texts[y] = '\n'.join(strings)
 
     text = '\n\n\n'.join(texts.values())
     stopwords.extend(['cls.', 'self.'])
