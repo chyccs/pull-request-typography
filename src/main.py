@@ -42,7 +42,7 @@ def main():
     kw_extractor = yake.KeywordExtractor(
         lan="en",
         n=3,
-        top=300,
+        top=30,
         dedupLim=0.9,
         stopwords=stopwords,
     )
