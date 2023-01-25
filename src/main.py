@@ -65,7 +65,7 @@ def main():
     decorated_title = th.highlight(pull_request.title, keywords)
     decorated_body = th.highlight(pull_request.body, keywords)
 
-    pull_request.update(title=decorated_title, body=decorated_body)
+    pull_request.edit(title=decorated_title, body=decorated_body)
 
 
 if __name__ == "__main__":
