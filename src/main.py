@@ -63,7 +63,7 @@ def main():
         highlight_post="`",
     )
     
-    p = re.search('(.*)((.*))(.*)', pull_request.title)
+    p = re.search('(.*)\((.*)\)(.*)', pull_request.title)
     print(p.group(1))
     print(p.group(2))
     print(p.group(3))
