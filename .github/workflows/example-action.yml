@@ -21,5 +21,5 @@ jobs:
         # or use a released GitHub Action
         uses: chyccs/pull-request-typography@master
         with:
-          src_path: ./sample
+          src_path: "."
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
