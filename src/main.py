@@ -30,24 +30,24 @@ TAG = [
 
 def main():
     owner = os.environ['owner']
-    repository = os.environ['repository']
-    pull_request_number = os.environ['pull_request_number']
+    repo = os.environ['repository']
+    pull_request_num = os.environ['pull_request_number']
     token = os.environ['access_token']
+    src_path = os.environ['src_path']
 
     pull_request = fetch_pull_request(
         access_token=token,
         owner=owner,
-        repository=repository,
-        number=int(pull_request_number),
+        repository=repo,
+        number=pull_request_num,
     )
 
-    src_path = environ.get("src_path", default='sample/')
     stopwords = environ.get("stopwords", default=[])
 
     texts = {}
 
     for x in walk(src_path):
-        for y in glob.glob(path.join(x[0], '*.py')):
+        for y in glob.glob(path.join(x[0], '*')):
             if not y.startswith('./.venv'):
                 file = open(y, "r")
                 strings = file.readlines()
