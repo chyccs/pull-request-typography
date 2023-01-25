@@ -73,7 +73,7 @@ def main():
     decorated_body = th.highlight(pull_request.body, keywords)
 
     pull_request.edit(
-        title=f'{p.group(2)}{decorated_title}',
+        title=f'{p.group(2)}: {decorated_title.lower()}',
         body=decorated_body,
     )
 
