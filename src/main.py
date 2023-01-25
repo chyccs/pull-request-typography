@@ -64,7 +64,7 @@ def main():
     )
     
     p = re.search('(.*)((.*))(.*)/g', pull_request.title)
-    
+    print(p)
     plain_title=f'{p.group(0)}{p.group(2)}'
 
     decorated_title = th.highlight(plain_title, keywords)
