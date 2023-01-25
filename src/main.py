@@ -1,12 +1,7 @@
-import glob
 import keyword
 import os
 import re
-from os import (
-    environ,
-    path,
-    walk,
-)
+from os import environ
 
 import yake
 from yake.highlight import TextHighlighter
@@ -31,7 +26,7 @@ TAG = [
 def main():
     owner = os.environ['owner']
     repo = os.environ['repository']
-    pull_request_num = os.environ['pull_request_number']
+    pull_request_num = int(os.environ['pull_request_number'])
     token = os.environ['access_token']
     src_path = os.environ['src_path']
 
@@ -44,32 +39,34 @@ def main():
 
     stopwords = environ.get("stopwords", default=[])
 
+    kw_extractor = yake.KeywordExtractor(
+        lan="en",
+        n=3,
+        dedupLim=0.9,
+        stopwords=stopwords,
+    )
+    
+    keywords = []
     texts = {}
-
-    for x in walk(src_path):
-        for y in glob.glob(path.join(x[0], '*')):
-            if not y.startswith('./.venv'):
-                file = open(y, "r")
+    for root, _, f_names in os.walk(src_path):
+        for f in f_names:
+            file_path = os.path.join(root, f)
+            try:
+                file = open(file_path, "r")
                 strings = file.readlines()
-                texts[y] = '\n'.join(strings)
+                texts[file_path] = '\n'.join(strings)
+                extracted = kw_extractor.extract_keywords('\n'.join(strings))
+                extracted = sorted(extracted, key=lambda x: x[1], reverse=True)
+                keywords.extend(extracted)
+            except UnicodeDecodeError as decode_err:
+                pass
 
-    text = '\n\n\n'.join(texts.values())
     stopwords.extend(['cls.', 'self.'])
     stopwords.extend(keyword.kwlist)
     stopwords.extend(keyword.softkwlist)
 
-    kw_extractor = yake.KeywordExtractor(
-        lan="en",
-        n=3,
-        top=300,
-        dedupLim=0.9,
-        stopwords=stopwords,
-    )
-    keywords = kw_extractor.extract_keywords(text)
-    keywords = sorted(keywords, key=lambda x: x[1], reverse=True)
-
     # for kw, v in keywords:
-    #     print("yake: ", kw, "/ score", v)
+    #     print("extracted: ", kw, "/ score", v)
 
     th = TextHighlighter(
         max_ngram_size=3,
@@ -79,9 +76,9 @@ def main():
 
     if pull_request.title.find(':') < 0:
         p = re.search('(.*)[(](.*)[)](.*)', pull_request.title)
-        decorated_title = th.highlight(f'{p.group(1)}{p.group(3)}', keywords)
-        tag = p.group(2).strip()
-        decorated_title = f'{tag}: {decorated_title.lower().strip()}'
+        plain_title = th.highlight(f'{p.group(1)}{p.group(3)}', keywords)
+        tag = p.group(2).lower().strip()
+        decorated_title = f'{tag}: {plain_title.lower().strip()}'
     else:
         decorated_title = th.highlight(pull_request.title, keywords)
 
