@@ -6,10 +6,8 @@ import keyword
 
 
 def main():
-    pull_request = environ.get("pull_request", default={})
-    print(pull_request)
-    title = pull_request.get('title')
-    body = pull_request.get('body')
+    title = environ.get('title')
+    body = environ.get('body')
     src_path = environ.get("src_path", default='sample/')
     stopwords = environ.get("stopwords", default=[])
     
