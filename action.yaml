@@ -1,6 +1,6 @@
-name: 'Pull-Request Decorator'
+name: 'Pull-Request-Typography'
 
-description: 'A GitHub Action that takes an input and returns the square of the number'
+description: 'Pull-Request-Typography'
 
 inputs:
   src_path:
@@ -12,12 +12,6 @@ inputs:
     description: 'Path of source code'
     required: true
     default: "."
-
-outputs:
-  title:
-    value: ${{ steps.main.outputs.title }}
-  body:
-    value: ${{ steps.main.outputs.body }}
 
 runs:
   using: 'composite'
@@ -55,6 +49,7 @@ runs:
       shell: bash
       env:
         owner: ${{ github.repository_owner }}
-        repository: "${{ github.event.repository.name }}"
-        pull_request_number: "${{ github.event.pull_request.number }}"
-        access_token: "${{ inputs.GITHUB_TOKEN }}"
+        repository: ${{ github.event.repository.name }}
+        pull_request_number: ${{ github.event.pull_request.number }}
+        access_token: ${{ inputs.GITHUB_TOKEN }}
+        src_path: ${{ inputs.src_path }}

@@ -1,4 +1,4 @@
-name: Test Action
+name: Example Action
 
 on:
   pull_request:
@@ -11,7 +11,6 @@ permissions:
 jobs:
   highlight:
     runs-on: ubuntu-latest
-    name: Returns the number square
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -20,7 +19,7 @@ jobs:
         id: main
         # uses: ./ # Uses an action in the root directory
         # or use a released GitHub Action
-        uses: chyccs/keyword-emphasizer@master
+        uses: chyccs/pull-request-typography@master
         with:
           src_path: ./sample
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
