@@ -1,31 +1,30 @@
 import glob
 import keyword
 import os
+import re
 from os import (
     environ,
     path,
     walk,
 )
-import re
 
 import yake
 from yake.highlight import TextHighlighter
 
 from services import fetch_pull_request
 
-
 TAG = [
-  'build',
-  'chore',
-  'ci',
-  'docs',
-  'feat',
-  'fix',
-  'perf',
-  'refactor',
-  'revert',
-  'style',
-  'test',
+    'build',
+    'chore',
+    'ci',
+    'docs',
+    'feat',
+    'fix',
+    'perf',
+    'refactor',
+    'revert',
+    'style',
+    'test',
 ]
 
 
@@ -34,7 +33,7 @@ def main():
     repository = os.environ['repository']
     pull_request_number = os.environ['pull_request_number']
     token = os.environ['access_token']
-    
+
     pull_request = fetch_pull_request(
         access_token=token,
         owner=owner,
@@ -77,15 +76,15 @@ def main():
         highlight_pre="`",
         highlight_post="`",
     )
-    
-    if  pull_request.title.find(':') < 0:
-        p = re.search('(.*)\((.*)\)(.*)', pull_request.title)
+
+    if pull_request.title.find(':') < 0:
+        p = re.search('(.*)[(](.*)[)](.*)', pull_request.title)
         decorated_title = th.highlight(f'{p.group(1)}{p.group(3)}', keywords)
         tag = p.group(2).strip()
         decorated_title = f'{tag}: {decorated_title.lower().strip()}'
     else:
         decorated_title = th.highlight(pull_request.title, keywords)
-        
+
     decorated_body = th.highlight(pull_request.body, keywords)
 
     pull_request.edit(
