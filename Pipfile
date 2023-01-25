@@ -13,7 +13,7 @@ pre-commit = "*"
 
 [packages]
 yake = "==0.4.8"
-PyGithub = "==1.51"
+PyGithub = "==1.57"
 setuptools = "*"
 wheel = "*"
 
