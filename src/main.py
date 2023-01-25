@@ -54,7 +54,7 @@ def main():
     output_file = os.getenv('GITHUB_OUTPUT')
 
     with open(output_file, "a") as output:
-        output.write(f"title={decorated_title}")
+        output.write(f"title={decorated_title}\n")
         output.write(f"body={decorated_body}")
     
 if __name__ == "__main__":
