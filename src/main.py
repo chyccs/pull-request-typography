@@ -81,7 +81,8 @@ def main():
     if not pull_request.title.find(':'):
         p = re.search('(.*)\((.*)\)(.*)', pull_request.title)
         decorated_title = th.highlight(f'{p.group(1)}{p.group(3)}', keywords)
-        decorated_title = f'{p.group(2)}: {decorated_title.lower()}'
+        tag = p.group(2).strip()
+        decorated_title = f'{tag}: {decorated_title.lower().strip()}'
     else:
         decorated_title = th.highlight(pull_request.title, keywords)
         
