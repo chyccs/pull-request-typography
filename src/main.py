@@ -42,7 +42,6 @@ def main():
     kw_extractor = yake.KeywordExtractor(
         lan="en",
         n=3,
-        top=30,
         dedupLim=0.9,
         stopwords=stopwords,
     )
@@ -67,7 +66,7 @@ def main():
     stopwords.extend(keyword.softkwlist)
 
     # for kw, v in keywords:
-    #     print("yake: ", kw, "/ score", v)
+    #     print("extracted: ", kw, "/ score", v)
 
     th = TextHighlighter(
         max_ngram_size=3,
@@ -77,9 +76,9 @@ def main():
 
     if pull_request.title.find(':') < 0:
         p = re.search('(.*)[(](.*)[)](.*)', pull_request.title)
-        decorated_title = th.highlight(f'{p.group(1)}{p.group(3)}', keywords)
+        plain_title = th.highlight(f'{p.group(1)}{p.group(3)}', keywords)
         tag = p.group(2).lower().strip()
-        decorated_title = f'{tag}: {decorated_title.lower().strip()}'
+        decorated_title = f'{tag}: {plain_title.lower().strip()}'
     else:
         decorated_title = th.highlight(pull_request.title, keywords)
 
