@@ -23,8 +23,12 @@ TAG = [
 ]
 
 
-def __should_relocate_words(title: str):
-    return (title.find(':') < 0 and title.lower().find('bump') < 0)
+def __can_process(title: str):
+    return title.lower().find('bump') < 0
+
+
+def __can_relocate_words(title: str):
+    return title.find(':') < 0
 
 
 def main():
@@ -40,6 +44,9 @@ def main():
         repository=repo,
         number=pull_request_num,
     )
+    
+    if not __can_process(pull_request.title):
+        return
 
     stopwords = environ.get("stopwords", default=[])
 
@@ -78,7 +85,7 @@ def main():
         highlight_post="`",
     )
 
-    if __should_relocate_words(pull_request.title):
+    if __can_relocate_words(pull_request.title):
         p = re.search('(.*)[(](.*)[)](.*)', pull_request.title)
         plain_title = th.highlight(f'{p.group(1)}{p.group(3)}', keywords)
         tag = p.group(2).lower().strip()
