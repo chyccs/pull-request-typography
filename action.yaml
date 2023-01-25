@@ -54,9 +54,9 @@ runs:
       run: pipenv run python src/main.py
       shell: bash
       env:
-        title: ${{ github.event.pull_request.title }}
-        body: ${{ github.event.pull_request.body }}
-        src_path: ${{ inputs.src_path }}
+        title: "${{ github.event.pull_request.title }}"
+        body: "${{ github.event.pull_request.body }}"
+        src_path: "${{ inputs.src_path }}"
 
     - run: |
         gh pr edit ${{ github.event.pull_request.number }} --title '${{ steps.main.outputs.title }}' --body '${{ steps.main.outputs.body }}'
