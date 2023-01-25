@@ -8,6 +8,10 @@ inputs:
     description: 'Path of source code'
     required: true
     default: "."
+  GITHUB_TOKEN:
+    description: 'Path of source code'
+    required: true
+    default: "."
 
 outputs:
   title:
