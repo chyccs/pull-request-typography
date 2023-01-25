@@ -1,22 +1,19 @@
 # action.yaml
-name: 'Keyword Emphasizer'
+name: 'Pull-Request Decorator'
 
 description: 'A GitHub Action that takes an input and returns the square of the number'
 
 inputs:
-  words:
-    description: 'Enter a number'
-    required: true
-    default: "1"
   src_path:
-    description: 'Enter a number'
+    description: 'Path of source code'
     required: true
-    default: "1"
+    default: "."
 
 outputs:
-  highlighted:
-    description: 'Square of the input'
-    value: ${{ steps.main.outputs.highlighted }}
+  title:
+    value: ${{ steps.main.outputs.title }}
+  body:
+    value: ${{ steps.main.outputs.body }}
 
 runs:
   using: 'composite'
@@ -46,12 +43,12 @@ runs:
       if: steps.cache-pipenv.outputs.cache-hit != 'true'
       run: |
         pipenv install --dev
-        pipenv graph
       shell: bash
 
     - name: Pass Inputs to Shell
       run: |
-        echo "words=${{ inputs.words }}" >> $GITHUB_ENV
+        echo "title=${{ github.event.pull_request.title }}" >> $GITHUB_ENV
+        echo "body=${{ github.event.pull_request.body }}" >> $GITHUB_ENV
         echo "src_path=${{ inputs.src_path }}" >> $GITHUB_ENV
       shell: bash
     
@@ -59,3 +56,10 @@ runs:
       id: main
       run: pipenv run python src/main.py
       shell: bash
+
+    - run: |
+        gh pr edit ${{ github.event.pull_request.number }} --title '${{ steps.main.outputs.title }}' --body '${{ steps.main.outputs.body }}'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        OWNER: ${{ github.repository_owner }}
+        REPO: ${{ github.event.repository.name }}

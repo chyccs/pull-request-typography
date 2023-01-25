@@ -22,34 +22,15 @@ jobs:
       #   id: github_context_step
       #   run: echo '${{ toJSON(github) }}'
 
-      # - run: |
-      #     pull_request="$(gh pr view ${{ github.event.pull_request.number }})"
-      #     echo 'TITLE='$pull_request.title >> $GITHUB_ENV
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     OWNER: ${{ github.repository_owner }}
-      #     REPO: ${{ github.event.repository.name }}
-      
-      # - run: |
-      #     echo $TITLE
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
       - name: Run main
         id: main
         uses: ./ # Uses an action in the root directory
         # or use a released GitHub Action
         # uses: shipyard/github-action/fetch-shipyard-env@1.0.0
         with:
-          words: ${{ github.event.pull_request.title }}
           src_path: ./sample
 
-      - name: Print the highlighted words
-        run: echo "${{ steps.main.outputs.highlighted }}"
-
-      - run: |
-          gh pr edit ${{ github.event.pull_request.number }} --title '${{ steps.main.outputs.highlighted }}'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          OWNER: ${{ github.repository_owner }}
-          REPO: ${{ github.event.repository.name }}
+      - name: Print the highlighted result
+        run: |
+          echo "${{ steps.main.outputs.title }}"
+          echo "${{ steps.main.outputs.body }}"
