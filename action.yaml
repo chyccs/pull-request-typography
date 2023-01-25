@@ -18,7 +18,8 @@ runs:
   steps:
     - name: Move to path of action
       run: |
-        cd ${{ github.action_path }} 
+        cd ${{ github.action_path }}
+        ls ${{ github.action_path }}
       shell: bash
 
     - name: Install Python
