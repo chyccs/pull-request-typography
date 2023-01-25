@@ -5,7 +5,15 @@
 
 version: 2
 updates:
-  - package-ecosystem: "" # See documentation for possible values
+  - package-ecosystem: "pip" # See documentation for possible values
     directory: "/" # Location of package manifests
+    rebase-strategy: "auto"
+    assignees:
+      - "chyccs"
+    reviewers:
+      - "chyccs"
     schedule:
       interval: "daily"
+#      day: "wednesday"
+      time: "09:00"
+      timezone: "Asia/Seoul"
