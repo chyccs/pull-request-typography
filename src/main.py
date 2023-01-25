@@ -1,5 +1,6 @@
 import glob
 from os import environ, walk, path
+import os
 import yake
 from yake.highlight import TextHighlighter
 import keyword
@@ -47,8 +48,14 @@ def main():
     )
     decorated_title = th.highlight(title, keywords)
     decorated_body = th.highlight(body, keywords)
-    print(f"::set-output name=title::{decorated_title}")
-    print(f"::set-output name=body::{decorated_body}")
+    # print(f"::set-output name=title::{decorated_title}")
+    # print(f"::set-output name=body::{decorated_body}")
 
+    output_file = os.getenv('GITHUB_OUTPUT')
+
+    with open(output_file, "a") as output:
+        output.write(f"title={decorated_title}")
+        output.write(f"body={decorated_body}")
+    
 if __name__ == "__main__":
 	main()
