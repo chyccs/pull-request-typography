@@ -62,7 +62,6 @@ def main():
             except UnicodeDecodeError as decode_err:
                 pass
 
-    text = '\n\n\n'.join(texts.values())
     stopwords.extend(['cls.', 'self.'])
     stopwords.extend(keyword.kwlist)
     stopwords.extend(keyword.softkwlist)
@@ -79,7 +78,7 @@ def main():
     if pull_request.title.find(':') < 0:
         p = re.search('(.*)[(](.*)[)](.*)', pull_request.title)
         decorated_title = th.highlight(f'{p.group(1)}{p.group(3)}', keywords)
-        tag = p.group(2).strip()
+        tag = p.group(2).lower().strip()
         decorated_title = f'{tag}: {decorated_title.lower().strip()}'
     else:
         decorated_title = th.highlight(pull_request.title, keywords)
