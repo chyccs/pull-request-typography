@@ -50,6 +50,7 @@ runs:
         echo "title=${{ github.event.pull_request.title }}" >> $GITHUB_ENV
         echo "body=${{ github.event.pull_request.body }}" >> $GITHUB_ENV
         echo "src_path=${{ inputs.src_path }}" >> $GITHUB_ENV
+        
       shell: bash
     
     - name: Run main
@@ -60,6 +61,6 @@ runs:
     - run: |
         gh pr edit ${{ github.event.pull_request.number }} --title '${{ steps.main.outputs.title }}' --body '${{ steps.main.outputs.body }}'
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
         OWNER: ${{ github.repository_owner }}
         REPO: ${{ github.event.repository.name }}

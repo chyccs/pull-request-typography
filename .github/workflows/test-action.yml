@@ -29,6 +29,7 @@ jobs:
         # uses: shipyard/github-action/fetch-shipyard-env@1.0.0
         with:
           src_path: ./sample
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Print the highlighted result
         run: |
