@@ -39,6 +39,15 @@ def main():
 
     stopwords = environ.get("stopwords", default=[])
 
+    kw_extractor = yake.KeywordExtractor(
+        lan="en",
+        n=3,
+        top=300,
+        dedupLim=0.9,
+        stopwords=stopwords,
+    )
+    
+    keywords = []
     texts = {}
     for root, _, f_names in os.walk(src_path):
         for f in f_names:
@@ -47,6 +56,9 @@ def main():
                 file = open(file_path, "r")
                 strings = file.readlines()
                 texts[file_path] = '\n'.join(strings)
+                extracted = kw_extractor.extract_keywords('\n'.join(strings))
+                extracted = sorted(extracted, key=lambda x: x[1], reverse=True)
+                keywords.extend(extracted)
             except UnicodeDecodeError as decode_err:
                 pass
 
@@ -54,16 +66,6 @@ def main():
     stopwords.extend(['cls.', 'self.'])
     stopwords.extend(keyword.kwlist)
     stopwords.extend(keyword.softkwlist)
-
-    kw_extractor = yake.KeywordExtractor(
-        lan="en",
-        n=3,
-        top=300,
-        dedupLim=0.9,
-        stopwords=stopwords,
-    )
-    keywords = kw_extractor.extract_keywords(text)
-    keywords = sorted(keywords, key=lambda x: x[1], reverse=True)
 
     # for kw, v in keywords:
     #     print("yake: ", kw, "/ score", v)
