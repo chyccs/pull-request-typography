@@ -51,12 +51,8 @@ runs:
 
     - name: Pass Inputs to Shell
       run: |
-        echo "title=${{ github.event.pull_request.title }}" >> $GITHUB_ENV
-        body="${{ github.event.pull_request.body }}"
-        echo $body
-        echo "body=$body" >> $GITHUB_ENV
+        echo "pull_request=${{ fromJSON(github.event.pull_request) }}" >> $GITHUB_ENV
         echo "src_path=${{ inputs.src_path }}" >> $GITHUB_ENV
-        
       shell: bash
     
     - name: Run main

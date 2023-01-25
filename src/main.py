@@ -6,8 +6,9 @@ import keyword
 
 
 def main():
-    title = environ.get("title", default='fix invalid character and Stroke Module')
-    body = environ.get("body", default='fix invalid character and Stroke Module')
+    pull_request = environ.get("pull_request", default={})
+    title = pull_request.get('title')
+    body = pull_request.get('body')
     src_path = environ.get("src_path", default='sample/')
     stopwords = environ.get("stopwords", default=[])
     
