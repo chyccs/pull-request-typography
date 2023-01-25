@@ -1,0 +1,56 @@
+# NOTE: you have to use single-quoted strings in TOML for regular expressions.
+# It's the equivalent of r-strings in Python.  Multiline strings are treated as
+# verbose regular expressions by Black.  Use [ ] to denote a significant space
+# character.
+[tool.black]
+line-length = 120
+target-version = ['py38']
+extend-exclude = '''
+/(
+  | migrations
+)/
+'''
+skip-string-normalization = true
+# We use preview style for formatting Black itself. If you
+# want stable formatting across releases, you should keep
+# this off.
+# preview = true
+
+[tool.isort]
+### Same config as `setup.cfg` file ###
+# An integer that represents the longest line-length you want a single import to take. Have to be same with black, flake8, pylint
+line_length = 120
+
+# An integer that represents the number of spaces you would like to indent by or Tab to indent by a single tab.
+indent = '    '
+
+# An integer that represents how you want imports to be displayed if they're long enough to span multiple lines.
+multi_line_output = 3
+
+# Force from imports to be grid wrapped regardless of line length,
+# where the value given is the number of imports allowed before wrapping occurs.
+force_grid_wrap = 2
+
+# Will set isort to automatically add a trailing comma to the end of from imports.
+include_trailing_comma = true
+
+# prevent the listed sections from being split from the previous section by an empty line.
+# sections=FUTURE,STDLIB,THIRDPARTY,FIRSTPARTY,LOCALFOLDER
+no_lines_before = 'LOCALFOLDER'
+
+# If set, from imports will be displayed above normal (straight) imports.
+from_first = false
+
+# If set, import sorting will take case in consideration when sorting.
+case_sensitive = false
+
+# A list of imports that will be forced to display within the third party category.
+known_third_party = 'django'
+
+### Config to use with black ###
+# https://black.readthedocs.io/en/stable/guides/using_black_with_other_tools.html#isort
+profile = 'black'
+use_parentheses = true
+ensure_newline_before_comments = true
+
+skip = ['migrations', '.venv', 'settings', '__init__.py']

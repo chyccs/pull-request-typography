@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mongo
+  name: mongo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:
+      containers:
+      - image: mongo:4.4
+        name: mongo
+        args: ["--dbpath","/data/db"]
+        volumeMounts:
+        - name: mongo-data
+          mountPath: "/data/db"
+      volumes:
+        - name: mongo-data
+          emptyDir: {}

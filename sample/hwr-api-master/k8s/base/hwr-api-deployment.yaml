@@ -1,0 +1,115 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hwr-api
+  labels:
+    app: hwr-api
+  annotations:
+    alive: "true"
+spec:
+  replicas: 2
+  minReadySeconds: 30
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 50%
+  selector:
+    matchLabels:
+      app: hwr-api
+  template:
+    metadata:
+      labels:
+        app: hwr-api
+    spec:
+      containers:
+      - name: hwr-api
+        image: icn.ocir.io/cnlkg4dnisfp/hwr-analyzer
+        imagePullPolicy: IfNotPresent
+        command:
+          - /bin/sh
+          - -c
+          - /docker-entrypoint.sh
+        volumeMounts:
+        - name: app-sock
+          mountPath: /app/static/
+        envFrom:
+          - configMapRef:
+              name: base-config
+        ports:
+        - containerPort: 8000
+          name: gunicorn
+        livenessProbe:
+          httpGet:
+            path: /status
+            port: gunicorn
+            scheme: HTTP
+          initialDelaySeconds: 5
+          timeoutSeconds: 30
+          periodSeconds: 15
+          successThreshold: 1
+          failureThreshold: 5
+        readinessProbe:
+          httpGet:
+            path: /status
+            port: gunicorn
+            scheme: HTTP
+          initialDelaySeconds: 5
+          timeoutSeconds: 5
+          periodSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
+      - name: nginx
+        image: nginx:stable
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - name: app-sock
+          mountPath: /app/static/
+        - name: nginx-conf
+          subPath: nginx.conf
+          mountPath: /etc/nginx/nginx.conf
+          readOnly: true
+        ports:
+        - name: http
+          containerPort: 80
+        command:
+          - /bin/sh
+          - -c
+          - nginx -g 'daemon off;'
+        lifecycle:
+          postStart:
+            exec:
+              command: [ "/bin/sh", "-c", "echo Hello from the postStart handler > /usr/share/message" ]
+          preStop:
+            exec:
+              command: [ "/bin/sh", "-c", "nginx -s quit; while killall -0 nginx; do sleep 1; done" ]
+        # lifecycle:
+        #   preStop:
+        #     exec:
+        #       # https://www.nginx.com/resources/wiki/start/topics/tutorials/commandline/
+        #       command: [ "/bin/sh", "-c", "nginx -s quit; while kill -0 1; do sleep 1; done" ]
+        livenessProbe:
+          httpGet:
+            path: /health-check
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 10
+          timeoutSeconds: 30
+          periodSeconds: 30
+          failureThreshold: 5
+        readinessProbe:
+          httpGet:
+            path: /health-check
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 10
+          timeoutSeconds: 5
+          periodSeconds: 5
+          failureThreshold: 1
+          successThreshold: 3
+      volumes:
+      - name: app-sock
+        emptyDir: {}
+      - name: nginx-conf
+        configMap:
+          name: nginx-config

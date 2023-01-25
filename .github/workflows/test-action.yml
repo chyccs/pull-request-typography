@@ -1,0 +1,26 @@
+name: Test Action
+
+on:
+  pull_request:
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  highlight:
+    runs-on: ubuntu-latest
+    name: Returns the number square
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Run main
+        id: main
+        # uses: ./ # Uses an action in the root directory
+        # or use a released GitHub Action
+        uses: chyccs/keyword-emphasizer@master
+        with:
+          src_path: ./sample
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

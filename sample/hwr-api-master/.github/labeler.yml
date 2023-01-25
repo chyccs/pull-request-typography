@@ -1,0 +1,21 @@
+workflows:
+- .github/workflows/*
+
+k8s-yaml:
+- k8s/**/*.yaml
+
+k8s-env:
+- k8s/**/*.env
+
+django:
+- hwr_analyzer/**/*
+
+django-settings:
+- hwr_analyzer/hwr_analyzer/**/*
+
+django-test:
+- hwr_analyzer/**/test_*.py
+
+pipfile:
+- Pipfile
+- Pipfile.lock
