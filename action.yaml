@@ -1,6 +1,6 @@
-name: 'Pull-Request-Typography'
+name: 'Pull Request Typography'
 
-description: 'Pull-Request-Typography'
+description: 'GitHub Action that helps you make pull-requests look nice'
 
 inputs:
   src_path:
