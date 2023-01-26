@@ -38,8 +38,7 @@ runs:
         path: ${{ env.local_action_path }}/.venv/
         key: ${{ runner.os }}-pipenv-${{ hashFiles('**/Pipfile.lock') }}
 
-    - name: Install dependencies
-      if: steps.cache-pipenv.outputs.cache-hit != 'true'
+    - name: Install pipenv
       run: |
         cpwd="$(pwd)"
         echo "$cpwd"
@@ -48,6 +47,7 @@ runs:
       shell: bash
 
     - name: Install dependencies
+      if: steps.cache-pipenv.outputs.cache-hit != 'true'
       run: |
         cd ${{ github.action_path }}
         export PIPENV_VENV_IN_PROJECT=1
