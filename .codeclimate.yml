@@ -60,8 +60,7 @@ plugins:
     enabled: true
   sonar-python:
     enabled: true
-  pylint:
-    enabled: true
+
 
 exclude_patterns:
 - "config/"
