@@ -59,7 +59,9 @@ runs:
     
     - name: Run main
       id: main
-      run: pipenv run python ${{ env.local_action_path }}/src/main.py
+      run: |
+        cd ${{ github.action_path }}
+        pipenv run python ${{ env.local_action_path }}/src/main.py
       shell: bash
       env:
         owner: ${{ github.repository_owner }}
