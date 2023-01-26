@@ -18,22 +18,15 @@ runs:
   steps:
     - name: Move to path of action
       run: |
-        echo "GITHUB_PATH: $GITHUB_WORKSPACE"
-        echo "GITHUB_PATH: $GITHUB_PATH"
-        echo "action_path: ${{ github.action_path }}"
         cd ${{ github.action_path }}
         pwd="$(pwd)"
         echo "local_action_path=$pwd" >> $GITHUB_ENV
-        echo ${{ env.local_action_path }}
-        ls ${{ github.action_path }}
       shell: bash
 
     - name: Install Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.9'
-        # cache: 'pipenv'
-        # cache-dependency-path: ${{ env.local_action_path }}/Pipfile.lock
 
     - id: cache-pipenv
       uses: actions/cache@v3
@@ -43,8 +36,6 @@ runs:
 
     - name: Install pipenv
       run: |
-        cpwd="$(pwd)"
-        echo "$cpwd"
         cd ${{ github.action_path }}
         python -m pip install --upgrade pipenv
       shell: bash
