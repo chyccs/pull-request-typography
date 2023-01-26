@@ -15,9 +15,9 @@ inputs:
 
 runs:
   using: 'composite'
-  working-directory: ./action
   steps:
     - name: Move to path of action
+      working-directory: ./action
       run: |
         echo "GITHUB_PATH: $GITHUB_WORKSPACE"
         echo "GITHUB_PATH: $GITHUB_PATH"
