@@ -32,7 +32,14 @@ runs:
         cache: 'pipenv'
         cache-dependency-path: ${{ env.local_action_path }}/Pipfile.lock
 
-    - name: Install pipenv
+    - id: cache-pipenv
+      uses: actions/cache@v3
+      with:
+        path: ${{ env.local_action_path }}/.venv/
+        key: ${{ runner.os }}-pipenv-${{ hashFiles('**/Pipfile.lock') }}
+
+    - name: Install dependencies
+      if: steps.cache-pipenv.outputs.cache-hit != 'true'
       run: |
         cpwd="$(pwd)"
         echo "$cpwd"
