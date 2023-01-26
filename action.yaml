@@ -15,9 +15,9 @@ inputs:
 
 runs:
   using: 'composite'
+  working-directory: ./action
   steps:
     - name: Move to path of action
-      working-directory: ./action
       run: |
         echo "GITHUB_PATH: $GITHUB_WORKSPACE"
         echo "GITHUB_PATH: $GITHUB_PATH"
@@ -31,7 +31,6 @@ runs:
 
     - name: Install Python
       uses: actions/setup-python@v4
-      working-directory: ./action
       with:
         python-version: '3.9'
         cache: 'pipenv'
@@ -39,13 +38,11 @@ runs:
 
     - id: cache-pipenv
       uses: actions/cache@v3
-      working-directory: ./action
       with:
         path: ${{ env.local_action_path }}/.venv/
         key: ${{ runner.os }}-pipenv-${{ hashFiles('**/Pipfile.lock') }}
 
     - name: Install pipenv
-      working-directory: ./action
       run: |
         cpwd="$(pwd)"
         echo "$cpwd"
@@ -54,7 +51,6 @@ runs:
       shell: bash
 
     - name: Install dependencies
-      working-directory: ./action
       if: steps.cache-pipenv.outputs.cache-hit != 'true'
       run: |
         cd ${{ github.action_path }}
@@ -63,7 +59,6 @@ runs:
       shell: bash
     
     - name: Run main
-      working-directory: ./action
       id: main
       run: pipenv run python ${{ env.local_action_path }}/src/main.py
       shell: bash
