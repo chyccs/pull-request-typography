@@ -6,10 +6,10 @@
 ### Usage
 
 ```yaml
-      - name: Pull-Request-Typography
-        uses: chyccs/pull-request-typography@master
-        continue-on-error: true
-        with:
-          src_path: "."
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  - name: Pull-Request-Typography
+    uses: chyccs/pull-request-typography@master
+    continue-on-error: true
+    with:
+        src_path: "."
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
