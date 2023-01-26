@@ -75,9 +75,9 @@ def main():
     stopwords.extend(keyword.kwlist)
     stopwords.extend(keyword.softkwlist)
     
-    extracted = sorted(extracted, key=lambda x: x[1], reverse=True)
-    for kw, v in keywords:
-        print("extracted: ", kw, "/ score", v)
+    # extracted = sorted(extracted, key=lambda x: x[1], reverse=True)
+    # for kw, v in keywords:
+    #     print("extracted: ", kw, "/ score", v)
 
     th = TextHighlighter(
         max_ngram_size=3,
