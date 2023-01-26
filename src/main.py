@@ -61,6 +61,8 @@ def main():
     for root, _, f_names in os.walk(src_path):
         for f in f_names:
             file_path = os.path.join(root, f)
+            if file_path.startswith('./.venv'):
+                continue
             try:
                 print(file_path)
                 file = open(file_path, "r")
