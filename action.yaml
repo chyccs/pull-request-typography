@@ -40,16 +40,10 @@ runs:
         python -m pip install --upgrade pipenv
       shell: bash
 
-    - id: cache-pipenv
-      uses: actions/cache@v3
-      with:
-        path: ${{ env.local_action_path }}/.local/share/virtualenvs
-        key: ${{ runner.os }}-pipenv-${{ hashFiles('**/Pipfile.lock') }}
-
     - name: Install dependencies
-      if: steps.cache-pipenv.outputs.cache-hit != 'true'
       run: |
         cd ${{ github.action_path }}
+        export PIPENV_VENV_IN_PROJECT=1
         pipenv install --dev
       shell: bash
     
