@@ -13,3 +13,6 @@
         src_path: "."
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
+
+### Dependencies
+* https://github.com/boudinfl/pke
