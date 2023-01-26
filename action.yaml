@@ -2,6 +2,10 @@ name: 'Pull Request Typography'
 
 description: 'GitHub Action that helps you make pull-requests look nice'
 
+branding:
+  icon: 'italic'
+  color: 'red'
+
 inputs:
   src_path:
     description: 'Path of source code'
