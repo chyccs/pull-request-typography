@@ -1,7 +1,7 @@
 import keyword
 import os
 import re
-from os import environ
+from os import environ as env
 
 import yake
 from yake.highlight import TextHighlighter
@@ -32,11 +32,11 @@ def __can_relocate_words(title: str):
 
 
 def main():
-    owner = os.environ['owner']
-    repo = os.environ['repository']
-    pull_request_num = int(os.environ['pull_request_number'])
-    token = os.environ['access_token']
-    src_path = os.environ['src_path']
+    owner = env['owner']
+    repo = env['repository']
+    pull_request_num = int(env['pull_request_number'])
+    token = env['access_token']
+    src_path = env['src_path']
 
     pull_request = fetch_pull_request(
         access_token=token,
@@ -44,11 +44,11 @@ def main():
         repository=repo,
         number=pull_request_num,
     )
-    
+
     if not __can_process(pull_request.title):
         return
 
-    stopwords = environ.get("stopwords", default=[])
+    stopwords = env.get("stopwords", default=[])
 
     kw_extractor = yake.KeywordExtractor(
         lan="en",
@@ -68,16 +68,17 @@ def main():
                 strings = file.readlines()
                 extracted = kw_extractor.extract_keywords('\n'.join(strings))
                 keywords.extend(extracted)
-            except UnicodeDecodeError as decode_err:
+            except UnicodeDecodeError:
                 pass
 
     stopwords.extend(['cls.', 'self.'])
     stopwords.extend(keyword.kwlist)
     stopwords.extend(keyword.softkwlist)
-    
-    # extracted = sorted(extracted, key=lambda x: x[1], reverse=True)
-    # for kw, v in keywords:
-    #     print("extracted: ", kw, "/ score", v)
+
+    if env.get("verbose"):
+        extracted = sorted(extracted, key=lambda x: x[1], reverse=True)
+        for kw, v in keywords:
+            print("extracted: ", kw, "/ score", v)
 
     th = TextHighlighter(
         max_ngram_size=3,
