@@ -44,7 +44,7 @@ def main():
         repository=repo,
         number=pull_request_num,
     )
-    
+
     if not __can_process(pull_request.title):
         return
 
@@ -68,7 +68,7 @@ def main():
                 strings = file.readlines()
                 extracted = kw_extractor.extract_keywords('\n'.join(strings))
                 keywords.extend(extracted)
-            except UnicodeDecodeError as decode_err:
+            except UnicodeDecodeError:
                 pass
 
     stopwords.extend(['cls.', 'self.'])
