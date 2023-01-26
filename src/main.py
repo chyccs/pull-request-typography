@@ -58,16 +58,15 @@ def main():
     )
 
     keywords = []
-    texts = {}
     for root, _, f_names in os.walk(src_path):
         for f in f_names:
             file_path = os.path.join(root, f)
+            if file_path.startswith('./.venv'):
+                continue
             try:
                 file = open(file_path, "r")
                 strings = file.readlines()
-                texts[file_path] = '\n'.join(strings)
                 extracted = kw_extractor.extract_keywords('\n'.join(strings))
-                extracted = sorted(extracted, key=lambda x: x[1], reverse=True)
                 keywords.extend(extracted)
             except UnicodeDecodeError as decode_err:
                 pass
@@ -75,7 +74,8 @@ def main():
     stopwords.extend(['cls.', 'self.'])
     stopwords.extend(keyword.kwlist)
     stopwords.extend(keyword.softkwlist)
-
+    
+    # extracted = sorted(extracted, key=lambda x: x[1], reverse=True)
     # for kw, v in keywords:
     #     print("extracted: ", kw, "/ score", v)
 
