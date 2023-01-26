@@ -64,7 +64,6 @@ def main():
             if file_path.startswith('./.venv'):
                 continue
             try:
-                print(file_path)
                 file = open(file_path, "r")
                 strings = file.readlines()
                 extracted = kw_extractor.extract_keywords('\n'.join(strings))
