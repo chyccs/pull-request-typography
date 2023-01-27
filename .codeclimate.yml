@@ -45,7 +45,7 @@ plugins:
     enabled: true
   radon:
     enabled: true
-    config: 
+    config:
       python_version: 3
       threshold: "C"
       channel: beta
