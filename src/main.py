@@ -64,8 +64,8 @@ def main():
             if file_path.startswith('./.venv'):
                 continue
             try:
-                file = open(file_path, "r")
-                strings = file.readlines()
+                with open(file_path, "r") as file:
+                    strings = file.readlines()
                 extracted = kw_extractor.extract_keywords('\n'.join(strings))
                 keywords.extend(extracted)
             except UnicodeDecodeError:
