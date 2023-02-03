@@ -56,9 +56,7 @@ def __highlight(text: str, keywords: Set[str]):
             continue
         if keyword.find(','):
             continue
-        print(f'keyword: {keyword}')
         highlighted = highlighted.replace(keyword, f'`{keyword}`')
-        print(f'highlighted: {keyword} -> {highlighted}')
     return highlighted
 
 
@@ -98,16 +96,12 @@ def main():
     plain_title = __decorate_number(plain_title)
     plain_title = __decorate_filename(plain_title, files)
 
-    print(keywords)
     decorated_title = f'{tag}: {__highlight(plain_title, keywords)}'
     decorated_body = __highlight(pull_request.body, keywords)
-    
-    print(decorated_title)
-    print(decorated_body)
-    
+
     pull_request.edit(
-        title=decorated_title,
-        # body=decorated_body,
+        title=decorated_title or pull_request.title,
+        body=decorated_body or pull_request.body,
     )
 
 
