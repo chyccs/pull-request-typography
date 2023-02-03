@@ -57,10 +57,8 @@ def main():
     pull_request_num = int(env['pull_request_number'])
     token = env['access_token']
     src_path = env['src_path']
-    symbols = env.get("symbols")
-    symbol_list = symbols.split('\n')
-    print(len(symbol_list))
-    print(symbol_list[0])
+    symbols = env["symbols"]
+    keywords = symbols.split('\n')
     
     pull_request = fetch_pull_request(
         access_token=token,
@@ -73,7 +71,10 @@ def main():
         return
 
     stopwords = env.get("stopwords", default=[])
-
+    stopwords.extend(['cls.', 'self.'])
+    stopwords.extend(keyword.kwlist)
+    stopwords.extend(keyword.softkwlist)
+    
     kw_extractor = yake.KeywordExtractor(
         lan="en",
         n=3,
@@ -89,22 +90,18 @@ def main():
             if file_path.startswith('./.venv'):
                 continue
             files.append(f)
-            try:
-                with open(file_path, "r") as file:
-                    strings = file.readlines()
-                extracted = kw_extractor.extract_keywords('\n'.join(strings))
-                keywords.extend(extracted)
-            except UnicodeDecodeError:
-                pass
+            # try:
+            #     with open(file_path, "r") as file:
+            #         strings = file.readlines()
+            #     extracted = kw_extractor.extract_keywords('\n'.join(strings))
+            #     keywords.extend(extracted)
+            # except UnicodeDecodeError:
+            #     pass
 
-    stopwords.extend(['cls.', 'self.'])
-    stopwords.extend(keyword.kwlist)
-    stopwords.extend(keyword.softkwlist)
-
-    if env.get("verbose"):
-        extracted = sorted(extracted, key=lambda x: x[1], reverse=True)
-        for kw, v in keywords:
-            print("extracted: ", kw, "/ score", v)
+    # if env.get("verbose"):
+    #     extracted = sorted(extracted, key=lambda x: x[1], reverse=True)
+    #     for kw, v in keywords:
+    #         print("extracted: ", kw, "/ score", v)
 
     th = TextHighlighter(
         max_ngram_size=3,
@@ -119,7 +116,8 @@ def main():
 
     decorated_title = f'{tag}: {th.highlight(plain_title, keywords)}'
     decorated_body = th.highlight(pull_request.body, keywords)
-
+    print(decorated_title)
+    print(decorated_body)
     pull_request.edit(
         title=decorated_title,
         body=decorated_body,
