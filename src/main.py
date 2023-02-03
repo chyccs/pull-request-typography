@@ -53,7 +53,7 @@ def __highlight(text: str, keywords: Set[str]):
     highlighted = text
     for keyword in keywords:
         highlighted = highlighted.replace(keyword, f'`{keyword}`')
-        print(f'highlighted: {highlighted}')
+        print(f'highlighted: {keyword} -> {highlighted}')
     return highlighted
 
 
