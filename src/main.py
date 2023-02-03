@@ -107,7 +107,7 @@ def main():
     
     pull_request.edit(
         title=decorated_title,
-        body=decorated_body,
+        # body=decorated_body,
     )
 
 
