@@ -1,12 +1,12 @@
-import keyword
 import os
 import re
 from os import environ as env
-from typing import List
+from typing import (
+    List,
+    Set,
+)
 
-import yake
 from services import fetch_pull_request
-from yake.highlight import TextHighlighter
 
 TAG = [
     'build',
@@ -51,12 +51,23 @@ def __parse_title(title: str):
     return p.group(1).lower().strip(), p.group(2).lower().strip()
 
 
+def __highlight(text: str, keywords: Set[str]):
+    highlighted = text
+    for k in keywords:
+        if len(k) < 2 or k.find(','):
+            continue
+        highlighted = highlighted.replace(k, f'`{k}`')
+    return highlighted
+
+
 def main():
     owner = env['owner']
     repo = env['repository']
     pull_request_num = int(env['pull_request_number'])
     token = env['access_token']
     src_path = env['src_path']
+    symbols = env["symbols"]
+    keywords = set(symbols.split('\n'))
 
     pull_request = fetch_pull_request(
         access_token=token,
@@ -68,16 +79,6 @@ def main():
     if not __can_process(pull_request.title):
         return
 
-    stopwords = env.get("stopwords", default=[])
-
-    kw_extractor = yake.KeywordExtractor(
-        lan="en",
-        n=3,
-        dedupLim=0.9,
-        stopwords=stopwords,
-    )
-
-    keywords = []
     files = []
     for root, _, f_names in os.walk(src_path):
         for f in f_names:
@@ -85,40 +86,17 @@ def main():
             if file_path.startswith('./.venv'):
                 continue
             files.append(f)
-            try:
-                with open(file_path, "r") as file:
-                    strings = file.readlines()
-                extracted = kw_extractor.extract_keywords('\n'.join(strings))
-                keywords.extend(extracted)
-            except UnicodeDecodeError:
-                pass
-
-    stopwords.extend(['cls.', 'self.'])
-    stopwords.extend(keyword.kwlist)
-    stopwords.extend(keyword.softkwlist)
-
-    if env.get("verbose"):
-        extracted = sorted(extracted, key=lambda x: x[1], reverse=True)
-        for kw, v in keywords:
-            print("extracted: ", kw, "/ score", v)
-
-    th = TextHighlighter(
-        max_ngram_size=3,
-        highlight_pre="`",
-        highlight_post="`",
-    )
 
     tag, plain_title = __parse_title(pull_request.title)
-
     plain_title = __decorate_number(plain_title)
     plain_title = __decorate_filename(plain_title, files)
 
-    decorated_title = f'{tag}: {th.highlight(plain_title, keywords)}'
-    decorated_body = th.highlight(pull_request.body, keywords)
+    decorated_title = f'{tag}: {__highlight(plain_title, keywords)}'
+    decorated_body = __highlight(pull_request.body, keywords)
 
     pull_request.edit(
-        title=decorated_title,
-        body=decorated_body,
+        title=decorated_title or pull_request.title,
+        body=decorated_body or pull_request.body,
     )
 
 
