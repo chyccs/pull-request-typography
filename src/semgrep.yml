@@ -1,0 +1,14 @@
+rules:
+  - id: fetch-class
+    languages:
+      - python
+    pattern-either:
+      - pattern: |
+            class $CMD(...):
+                ...
+      - pattern: |
+            def $CMD(...):
+                ...
+      - pattern: $CMD = ...
+    message: $CMD
+    severity: INFO

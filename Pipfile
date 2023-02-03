@@ -16,6 +16,7 @@ yake = "==0.4.8"
 PyGithub = "==1.57"
 setuptools = "*"
 wheel = "*"
+semgrep = "*"
 
 [requires]
 python_version = "3.9"

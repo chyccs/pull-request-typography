@@ -57,7 +57,9 @@ def main():
     pull_request_num = int(env['pull_request_number'])
     token = env['access_token']
     src_path = env['src_path']
-
+    symbols = env.get("symbols", default=[])
+    print(symbols)
+    
     pull_request = fetch_pull_request(
         access_token=token,
         owner=owner,

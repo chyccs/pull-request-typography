@@ -51,7 +51,14 @@ runs:
         export PIPENV_VENV_IN_PROJECT=1
         pipenv install --dev
       shell: bash
-    
+
+    - name: Search symbol
+      run: |
+        cd ${{ github.action_path }}
+        symbols="$(pipenv run semgrep --config=auto ${{ env.local_action_path }}/src/semgrep.yml ${{ inputs.src_path }})"
+        echo "symbols=$symbols" >> $GITHUB_ENV
+      shell: bash
+
     - name: Run main
       id: main
       run: |
@@ -64,3 +71,4 @@ runs:
         pull_request_number: ${{ github.event.pull_request.number }}
         access_token: ${{ inputs.GITHUB_TOKEN }}
         src_path: ${{ inputs.src_path }}
+        symbols: ${{ env.symbols }}
