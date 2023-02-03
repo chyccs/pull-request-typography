@@ -51,9 +51,8 @@ def __parse_title(title: str):
 
 def __highlight(text: str, keywords: List[str]):
     rep = dict((re.escape(k), f'`{k}`') for k in keywords) 
-    pattern = re.compile("|".join(rep.keys()))
-    print(pattern)
-    return pattern.sub(lambda m: rep[re.escape(m.group(0))], text)
+    pattern = re.compile("|".join([re.escape(k) for k in sorted(rep, key=len, reverse=True)]), flags=re.DOTALL)
+    return pattern.sub(lambda x: rep[x.group(0)], text)
 
 
 def main():
