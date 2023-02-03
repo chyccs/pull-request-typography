@@ -49,7 +49,7 @@ def __parse_title(title: str):
     return p.group(1).lower().strip(), p.group(2).lower().strip()
 
 
-def __highlight(text: str, keywords: Set[str]):
+def __highlight(text: str, keywords: List[str]):
     rep = dict((re.escape(k), f'`{k}`') for k in keywords)
     print(rep)
     pattern = re.compile("|".join(rep.keys()))
@@ -63,7 +63,7 @@ def main():
     token = env['access_token']
     src_path = env['src_path']
     symbols = env["symbols"]
-    keywords = set(symbols.split('\n'))
+    keywords = list(set(symbols.split('\n')))
     print(keywords)
     pull_request = fetch_pull_request(
         access_token=token,
