@@ -40,6 +40,17 @@ def __decorate_filename(title: str, files: List[str]):
     return re.sub(rf'([`]*)({files_available})([`]*)', r'`\2`', title)
 
 
+def __parse_title(title: str):
+    if __can_relocate_words(title):
+        p = re.search(r'(.*)[(\[](.*)[)\]](.*)', title)
+        plain_title = f'{p.group(1)}{p.group(3)}'
+        tag = p.group(2).lower().strip()
+        return tag, plain_title
+
+    p = re.search(r'(.*)[\:][ ]*(.*)', title)
+    return p.group(1).lower().strip(), p.group(2).lower().strip()
+
+
 def main():
     owner = env['owner']
     repo = env['repository']
@@ -97,16 +108,12 @@ def main():
         highlight_post="`",
     )
 
-    if __can_relocate_words(pull_request.title):
-        p = re.search('(.*)[(](.*)[)](.*)', pull_request.title)
-        plain_title = th.highlight(f'{p.group(1)}{p.group(3)}', keywords)
-        tag = p.group(2).lower().strip()
-        decorated_title = f'{tag}: {plain_title.lower().strip()}'
-    else:
-        decorated_title = th.highlight(pull_request.title, keywords)
+    tag, plain_title = __parse_title(pull_request.title)
 
-    decorated_title = __decorate_number(decorated_title)
-    decorated_title = __decorate_filename(decorated_title, files)
+    plain_title = __decorate_number(plain_title)
+    plain_title = __decorate_filename(plain_title, files)
+
+    decorated_title = f'{tag}: {th.highlight(plain_title, keywords)}'
     decorated_body = th.highlight(pull_request.body, keywords)
 
     pull_request.edit(
