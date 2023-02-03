@@ -2,6 +2,7 @@ import keyword
 import os
 import re
 from os import environ as env
+from typing import List
 
 import yake
 from yake.highlight import TextHighlighter
@@ -33,6 +34,10 @@ def __can_relocate_words(title: str):
 
 def __decorate_number(title: str):
     return re.sub(r'(([`]*)([0-9]+[0-9\.\-%$,]*)([`]*))', r'`\3`', title)
+
+
+def __decorate_filename(title: str, extensions: List[str]=[]):
+    return re.sub(r'([\w\_\-\(\):]+(.doc|.docx|.pdf|.jpg|.m4v|.mp4))', r'`\1`', title)
 
 
 def main():
@@ -99,6 +104,7 @@ def main():
         decorated_title = th.highlight(pull_request.title, keywords)
 
     decorated_title = __decorate_number(decorated_title)
+    decorated_title = __decorate_filename(decorated_title)
     decorated_body = th.highlight(pull_request.body, keywords)
 
     pull_request.edit(
