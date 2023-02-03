@@ -32,7 +32,7 @@ def __can_relocate_words(title: str):
 
 
 def __decorate_number(title: str):
-    return re.sub('([0-9]+[0-9\.\-%$,]*)', r'`\1`', title)
+    return re.sub('(([`]*)([0-9]+[0-9\.\-%$,]*)([`]*))', '`\3`', title)
 
 
 def main():
