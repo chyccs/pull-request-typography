@@ -92,7 +92,7 @@ def main():
 
     plain_title = __decorate_number(plain_title)
     plain_title = __decorate_filename(plain_title, files)
-
+    print(plain_title)
     decorated_title = f'{tag}: {__highlight(plain_title, keywords)}'
     decorated_body = __highlight(pull_request.body, keywords)
     
