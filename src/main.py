@@ -31,6 +31,10 @@ def __can_relocate_words(title: str):
     return title.find(':') < 0
 
 
+def __decorate_number(title: str):
+    return re.sub(r'(([`]*)([0-9]+[0-9\.\-%$,]*)([`]*))', r'`\3`', title)
+
+
 def main():
     owner = env['owner']
     repo = env['repository']
@@ -94,6 +98,7 @@ def main():
     else:
         decorated_title = th.highlight(pull_request.title, keywords)
 
+    decorated_title = __decorate_number(decorated_title)
     decorated_body = th.highlight(pull_request.body, keywords)
 
     pull_request.edit(
