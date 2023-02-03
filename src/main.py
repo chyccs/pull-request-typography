@@ -1,8 +1,10 @@
-import keyword
 import os
 import re
 from os import environ as env
-from typing import List, Set
+from typing import (
+    List,
+    Set,
+)
 
 from services import fetch_pull_request
 
@@ -51,12 +53,10 @@ def __parse_title(title: str):
 
 def __highlight(text: str, keywords: Set[str]):
     highlighted = text
-    for keyword in keywords:
-        if len(keyword) < 2:
+    for k in keywords:
+        if len(k) < 2 or k.find(','):
             continue
-        if keyword.find(','):
-            continue
-        highlighted = highlighted.replace(keyword, f'`{keyword}`')
+        highlighted = highlighted.replace(k, f'`{k}`')
     return highlighted
 
 
@@ -79,11 +79,6 @@ def main():
     if not __can_process(pull_request.title):
         return
 
-    stopwords = env.get("stopwords", default=[])
-    stopwords.extend(['cls.', 'self.'])
-    stopwords.extend(keyword.kwlist)
-    stopwords.extend(keyword.softkwlist)
-    
     files = []
     for root, _, f_names in os.walk(src_path):
         for f in f_names:
