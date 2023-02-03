@@ -93,10 +93,10 @@ def __multireplace(string, replacements, ignore_case=False):
 
 def __highlight(text: str, keywords: Set[str]):
     rep = dict((k, f'`{k}`') for k in keywords)
-    return __multireplace(text, rep)
-    # print(rep)
-    # pattern = re.compile("|".join(rep.keys()))
-    # return pattern.sub(lambda m: rep[re.escape(m.group(0))], text)
+    # return __multireplace(text, rep)
+    print(rep)
+    pattern = re.compile("|".join(rep.keys()))
+    return pattern.sub(lambda m: rep[re.escape(m.group(0))], text)
 
 
 def main():
