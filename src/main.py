@@ -64,7 +64,7 @@ def main():
     src_path = env['src_path']
     symbols = env["symbols"]
     keywords = symbols.split('\n')
-    
+    print(keywords)
     pull_request = fetch_pull_request(
         access_token=token,
         owner=owner,
