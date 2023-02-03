@@ -55,8 +55,11 @@ runs:
     - name: Search symbol
       run: |
         cd ${{ github.action_path }}
+        echo 'symbols<<\n' >> $GITHUB_ENV
+        curl https://example.com >> $GITHUB_ENV
         symbols="$(pipenv run semgrep --config=${{ env.local_action_path }}/src/semgrep.yml ${{ inputs.src_path }} -q --vim | awk -F ':' '{ print $6 }')"
-        echo "symbols=$symbols" >> $GITHUB_ENV
+        echo "$symbols" >> $GITHUB_ENV
+        echo '\n' >> $GITHUB_ENV
       shell: bash
 
     - name: Run main
