@@ -52,6 +52,7 @@ def __parse_title(title: str):
 def __highlight(text: str, keywords: List[str]):
     rep = dict((re.escape(k), f'`{k}`') for k in keywords) 
     pattern = re.compile("|".join(rep.keys()))
+    print(pattern)
     return pattern.sub(lambda m: rep[re.escape(m.group(0))], text)
 
 
@@ -95,8 +96,10 @@ def main():
 
     decorated_title = f'{tag}: {__highlight(plain_title, keywords)}'
     decorated_body = __highlight(pull_request.body, keywords)
+    
     print(decorated_title)
     print(decorated_body)
+    
     pull_request.edit(
         title=decorated_title,
         body=decorated_body,
