@@ -4,9 +4,7 @@ import re
 from os import environ as env
 from typing import List
 
-import yake
 from services import fetch_pull_request
-from yake.highlight import TextHighlighter
 
 TAG = [
     'build',
@@ -51,6 +49,12 @@ def __parse_title(title: str):
     return p.group(1).lower().strip(), p.group(2).lower().strip()
 
 
+def __highlight(text: str, keywords: List[str]):
+    rep = dict((re.escape(k), f'`{k}`') for k in keywords) 
+    pattern = re.compile("|".join(rep.keys()))
+    return pattern.sub(lambda m: rep[re.escape(m.group(0))], text)
+
+
 def main():
     owner = env['owner']
     repo = env['repository']
@@ -75,13 +79,6 @@ def main():
     stopwords.extend(keyword.kwlist)
     stopwords.extend(keyword.softkwlist)
     
-    kw_extractor = yake.KeywordExtractor(
-        lan="en",
-        n=3,
-        dedupLim=0.9,
-        stopwords=stopwords,
-    )
-
     keywords = []
     files = []
     for root, _, f_names in os.walk(src_path):
@@ -90,32 +87,14 @@ def main():
             if file_path.startswith('./.venv'):
                 continue
             files.append(f)
-            # try:
-            #     with open(file_path, "r") as file:
-            #         strings = file.readlines()
-            #     extracted = kw_extractor.extract_keywords('\n'.join(strings))
-            #     keywords.extend(extracted)
-            # except UnicodeDecodeError:
-            #     pass
-
-    # if env.get("verbose"):
-    #     extracted = sorted(extracted, key=lambda x: x[1], reverse=True)
-    #     for kw, v in keywords:
-    #         print("extracted: ", kw, "/ score", v)
-
-    th = TextHighlighter(
-        max_ngram_size=3,
-        highlight_pre="`",
-        highlight_post="`",
-    )
 
     tag, plain_title = __parse_title(pull_request.title)
 
     plain_title = __decorate_number(plain_title)
     plain_title = __decorate_filename(plain_title, files)
 
-    decorated_title = f'{tag}: {th.highlight(plain_title, keywords)}'
-    decorated_body = th.highlight(pull_request.body, keywords)
+    decorated_title = f'{tag}: {__highlight(plain_title, keywords)}'
+    decorated_body = __highlight(pull_request.body, keywords)
     print(decorated_title)
     print(decorated_body)
     pull_request.edit(

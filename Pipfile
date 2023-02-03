@@ -12,7 +12,6 @@ autopep8 = "*"
 pre-commit = "*"
 
 [packages]
-yake = "==0.4.8"
 PyGithub = "==1.57"
 setuptools = "*"
 wheel = "*"
