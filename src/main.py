@@ -5,9 +5,8 @@ from os import environ as env
 from typing import List
 
 import yake
-from yake.highlight import TextHighlighter
-
 from services import fetch_pull_request
+from yake.highlight import TextHighlighter
 
 TAG = [
     'build',
