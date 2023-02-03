@@ -52,8 +52,9 @@ def __parse_title(title: str):
 def __highlight(text: str, keywords: Set[str]):
     highlighted = text
     for keyword in keywords:
-        highlighted = highlighted.replace(keyword, f'`{keyword}`')
-        print(f'highlighted: {keyword} -> {highlighted}')
+        if len(keyword) > 2:
+            highlighted = highlighted.replace(keyword, f'`{keyword}`')
+            print(f'highlighted: {keyword} -> {highlighted}')
     return highlighted
 
 
@@ -88,14 +89,12 @@ def main():
             if file_path.startswith('./.venv'):
                 continue
             files.append(f)
-    print(f'pull_request.title: {pull_request.title}')
+
     tag, plain_title = __parse_title(pull_request.title)
-    print(f'__parse_title: {plain_title}')
     plain_title = __decorate_number(plain_title)
-    print(f'__decorate_number: {plain_title}')
     plain_title = __decorate_filename(plain_title, files)
-    print(f'__decorate_filename: {plain_title}')
-    
+
+    print(keywords)
     decorated_title = f'{tag}: {__highlight(plain_title, keywords)}'
     decorated_body = __highlight(pull_request.body, keywords)
     
