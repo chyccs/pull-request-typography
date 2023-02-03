@@ -2,7 +2,7 @@ import keyword
 import os
 import re
 from os import environ as env
-from typing import List
+from typing import List, Set
 
 from services import fetch_pull_request
 
@@ -49,7 +49,7 @@ def __parse_title(title: str):
     return p.group(1).lower().strip(), p.group(2).lower().strip()
 
 
-def __highlight(text: str, keywords: List[str]):
+def __highlight(text: str, keywords: Set[str]):
     rep = dict((re.escape(k), f'`{k}`') for k in keywords)
     print(rep)
     pattern = re.compile("|".join(rep.keys()))
@@ -63,7 +63,7 @@ def main():
     token = env['access_token']
     src_path = env['src_path']
     symbols = env["symbols"]
-    keywords = symbols.split('\n')
+    keywords = set(symbols.split('\n'))
     print(keywords)
     pull_request = fetch_pull_request(
         access_token=token,
@@ -80,7 +80,6 @@ def main():
     stopwords.extend(keyword.kwlist)
     stopwords.extend(keyword.softkwlist)
     
-    keywords = []
     files = []
     for root, _, f_names in os.walk(src_path):
         for f in f_names:
