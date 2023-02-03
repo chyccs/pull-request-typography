@@ -58,7 +58,8 @@ def main():
     token = env['access_token']
     src_path = env['src_path']
     symbols = env.get("symbols", default=[])
-    print(symbols)
+    print(len(symbols))
+    print(symbols[0])
     
     pull_request = fetch_pull_request(
         access_token=token,
