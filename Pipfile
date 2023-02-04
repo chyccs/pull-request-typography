@@ -16,6 +16,7 @@ PyGithub = "==1.57"
 setuptools = "*"
 wheel = "*"
 semgrep = "*"
+stringcase = "*"
 
 [requires]
 python_version = "3.9"
