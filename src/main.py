@@ -88,7 +88,7 @@ def main():
     __extend_pluralize(symbols)
 
     keywords = sorted(set(symbols), key=len, reverse=True)
-
+    print(keywords)
     pull_request = fetch_pull_request(
         access_token=env['access_token'],
         owner=env['owner'],
