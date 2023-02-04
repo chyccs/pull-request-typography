@@ -64,12 +64,6 @@ def __highlight(text: str, keywords: Set[str]):
 
 
 def main():
-    owner = env['owner']
-    repo = env['repository']
-    pull_request_num = int(env['pull_request_number'])
-    token = env['access_token']
-    src_path = env['src_path']
-    
     symbols = env["symbols"]
     symbol_list = [humanize(symbol).lower().strip() for symbol in symbols.split('\n')]
     symbol_list = [symbol for symbol in symbol_list if len(symbol) > 3]
@@ -78,17 +72,17 @@ def main():
     keywords = set(symbol_list)
 
     pull_request = fetch_pull_request(
-        access_token=token,
-        owner=owner,
-        repository=repo,
-        number=pull_request_num,
+        access_token=env['access_token'],
+        owner=env['owner'],
+        repository=env['repository'],
+        number=int(env['pull_request_number']),
     )
 
     if not __can_process(pull_request.title):
         return
 
     files = []
-    for root, _, f_names in os.walk(src_path):
+    for root, _, f_names in os.walk(env['src_path']):
         for f in f_names:
             file_path = os.path.join(root, f)
             if file_path.startswith('./.venv'):
