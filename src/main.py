@@ -65,8 +65,8 @@ def __highlight(text: str, keywords: Set[str]):
 
 def main():
     symbols = env["symbols"]
-    symbol_list = [humanize(symbol).lower().strip() for symbol in symbols.split('\n')]
-    symbol_list = [symbol for symbol in symbol_list if len(symbol) > 3]
+    symbol_list = [humanize(symbol).lower().strip()
+                   for symbol in symbols.split('\n') if len(humanize(symbol).lower().strip()) > 3]
     symbol_list.extend([symbol.replace(' ', '_') for symbol in symbol_list])
     keywords = set(symbol_list)
 
