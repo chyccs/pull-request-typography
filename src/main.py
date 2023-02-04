@@ -68,7 +68,6 @@ def main():
     symbol_list = [humanize(symbol).lower().strip() for symbol in symbols.split('\n')]
     symbol_list = [symbol for symbol in symbol_list if len(symbol) > 3]
     symbol_list.extend([symbol.replace(' ', '_') for symbol in symbol_list])
-    symbol_list.extend([symbol.replace(' ', '-') for symbol in symbol_list])
     keywords = set(symbol_list)
 
     pull_request = fetch_pull_request(
