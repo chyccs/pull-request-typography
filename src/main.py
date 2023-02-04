@@ -6,6 +6,8 @@ from typing import (
     Set,
 )
 
+from inflection import humanize
+
 from services import fetch_pull_request
 
 TAG = [
@@ -54,33 +56,32 @@ def __parse_title(title: str):
 def __highlight(text: str, keywords: Set[str]):
     highlighted = text
     for k in keywords:
-        if len(k) < 2 or k.find(','):
+        try:
+            highlighted = highlighted.replace(k, f'`{k}`')
+        except ValueError:
             continue
-        highlighted = highlighted.replace(k, f'`{k}`')
     return highlighted
 
 
 def main():
-    owner = env['owner']
-    repo = env['repository']
-    pull_request_num = int(env['pull_request_number'])
-    token = env['access_token']
-    src_path = env['src_path']
     symbols = env["symbols"]
-    keywords = set(symbols.split('\n'))
+    symbol_list = [humanize(symbol).lower().strip()
+                   for symbol in symbols.split('\n') if len(humanize(symbol).lower().strip()) > 3]
+    symbol_list.extend([symbol.replace(' ', '_') for symbol in symbol_list])
+    keywords = set(symbol_list)
 
     pull_request = fetch_pull_request(
-        access_token=token,
-        owner=owner,
-        repository=repo,
-        number=pull_request_num,
+        access_token=env['access_token'],
+        owner=env['owner'],
+        repository=env['repository'],
+        number=int(env['pull_request_number']),
     )
 
     if not __can_process(pull_request.title):
         return
 
     files = []
-    for root, _, f_names in os.walk(src_path):
+    for root, _, f_names in os.walk(env['src_path']):
         for f in f_names:
             file_path = os.path.join(root, f)
             if file_path.startswith('./.venv'):
