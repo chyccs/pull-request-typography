@@ -61,7 +61,8 @@ def __highlight(text: str, keywords: Set[str]):
     highlighted = text
     for k in keywords:
         try:
-            highlighted = highlighted.replace(k, f'`{k}`')
+            highlighted = re.sub(rf'(?<!`)({k})(?!`)', r'`\1`', highlighted)
+            # highlighted = highlighted.replace(k, f'`{k}`')
         except ValueError:
             continue
     return highlighted
@@ -88,7 +89,7 @@ def main():
     __extend_pluralize(symbols)
 
     keywords = sorted(set(symbols), key=lambda s: len(s), reverse=True)
-    print(keywords)
+
     pull_request = fetch_pull_request(
         access_token=env['access_token'],
         owner=env['owner'],
