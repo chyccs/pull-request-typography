@@ -6,7 +6,11 @@ from typing import (
     Set,
 )
 
-from inflection import humanize
+from inflection import (
+    humanize,
+    pluralize,
+    singularize,
+)
 
 from services import fetch_pull_request
 
@@ -57,18 +61,33 @@ def __highlight(text: str, keywords: Set[str]):
     highlighted = text
     for k in keywords:
         try:
-            highlighted = highlighted.replace(k, f'`{k}`')
+            highlighted = re.sub(rf'(?<!`)({k})(?!`)', r'`\1`', highlighted)
         except ValueError:
             continue
     return highlighted
 
 
+def __extend_singularize(symbols: List[str]):
+    symbols.extend([singularize(symbol) for symbol in symbols])
+
+
+def __extend_pluralize(symbols: List[str]):
+    symbols.extend([pluralize(symbol) for symbol in symbols])
+
+
+def __symbolise(raw_symbols: str):
+    symbols = [humanize(symbol).lower().strip()
+               for symbol in raw_symbols.split('\n') if len(humanize(symbol).lower().strip()) > 3]
+    symbols.extend([symbol.replace(' ', '_') for symbol in symbols])
+    return symbols
+
+
 def main():
-    symbols = env["symbols"]
-    symbol_list = [humanize(symbol).lower().strip()
-                   for symbol in symbols.split('\n') if len(humanize(symbol).lower().strip()) > 3]
-    symbol_list.extend([symbol.replace(' ', '_') for symbol in symbol_list])
-    keywords = set(symbol_list)
+    symbols = __symbolise(env["symbols"])
+    __extend_singularize(symbols)
+    __extend_pluralize(symbols)
+
+    keywords = sorted(set(symbols), key=len, reverse=True)
 
     pull_request = fetch_pull_request(
         access_token=env['access_token'],
