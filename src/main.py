@@ -59,7 +59,7 @@ def __highlight(text: str, keywords: Set[str]):
         try:
             highlighted = highlighted.replace(k, f'`{k}`')
         except:
-            pass
+            continue
     return highlighted
 
 
