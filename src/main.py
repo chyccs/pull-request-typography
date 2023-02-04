@@ -54,6 +54,7 @@ def __parse_title(title: str):
 def __highlight(text: str, keywords: Set[str]):
     highlighted = text
     for k in keywords:
+        print(len(k))
         if len(k) < 2 or k.find(','):
             continue
         prev = highlighted
