@@ -69,8 +69,8 @@ def main():
     pull_request_num = int(env['pull_request_number'])
     token = env['access_token']
     src_path = env['src_path']
+    
     symbols = env["symbols"]
-
     symbol_list = [humanize(symbol).lower().strip() for symbol in symbols.split('\n')]
     symbol_list = [symbol for symbol in symbol_list if len(symbol) > 3]
     symbol_list.extend([symbol.replace(' ', '_') for symbol in symbol_list])
