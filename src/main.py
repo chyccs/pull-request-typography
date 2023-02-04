@@ -5,7 +5,9 @@ from typing import (
     List,
     Set,
 )
-from inflection import underscore, humanize, dasherize
+
+from inflection import humanize
+
 from services import fetch_pull_request
 
 TAG = [
@@ -68,13 +70,13 @@ def main():
     token = env['access_token']
     src_path = env['src_path']
     symbols = env["symbols"]
+
     symbol_list = [humanize(symbol).lower().strip() for symbol in symbols.split('\n')]
+    symbol_list = [symbol for symbol in symbol_list if len(symbol) > 3]
     symbol_list.extend([symbol.replace(' ', '_') for symbol in symbol_list])
     symbol_list.extend([symbol.replace(' ', '-') for symbol in symbol_list])
     keywords = set(symbol_list)
-    keywords = sorted(keywords)
-    print(keywords)
-    
+
     pull_request = fetch_pull_request(
         access_token=token,
         owner=owner,
@@ -96,13 +98,10 @@ def main():
     tag, plain_title = __parse_title(pull_request.title)
     plain_title = __decorate_number(plain_title)
     plain_title = __decorate_filename(plain_title, files)
-    
-    print(f'title: {tag}: {plain_title}')
+
     decorated_title = f'{tag}: {__highlight(plain_title, keywords)}'
     decorated_body = __highlight(pull_request.body, keywords)
-    print(f'decorated_title: {decorated_title}')
-    print(f'decorated_body: {decorated_body}')
-    
+
     pull_request.edit(
         title=decorated_title or pull_request.title,
         body=decorated_body or pull_request.body,
