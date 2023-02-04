@@ -75,15 +75,15 @@ def __extend_pluralize(symbols: List[str]):
     symbols.extend([pluralize(symbol) for symbol in symbols])
 
 
-def __symbolise(symbols: List[str]):
+def __symbolise(raw_symbols: str):
     symbols = [humanize(symbol).lower().strip()
-               for symbol in symbols.split('\n') if len(humanize(symbol).lower().strip()) > 3]
+               for symbol in raw_symbols.split('\n') if len(humanize(symbol).lower().strip()) > 3]
     symbols.extend([symbol.replace(' ', '_') for symbol in symbols])
+    return symbols
 
 
 def main():
-    symbols = env["symbols"]
-    __symbolise(symbols)
+    symbols = __symbolise(env["symbols"])
     __extend_singularize(symbols)
     __extend_pluralize(symbols)
     
