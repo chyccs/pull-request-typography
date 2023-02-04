@@ -15,4 +15,4 @@
 ```
 
 ### Dependencies
-* https://github.com/boudinfl/pke
+* https://github.com/returntocorp/semgrep
