@@ -54,11 +54,10 @@ def __parse_title(title: str):
 def __highlight(text: str, keywords: Set[str]):
     highlighted = text
     for k in keywords:
-        if len(k) < 2 or k.find(',') > 0:
-            continue
-        prev = highlighted
-        highlighted = highlighted.replace(k, f'`{k}`')
-        print(f'{k} -> {prev} -> {highlighted}')
+        try:
+            highlighted = highlighted.replace(k, f'`{k}`')
+        except Exception:
+            pass
     return highlighted
 
 
