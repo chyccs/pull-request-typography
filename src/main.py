@@ -5,6 +5,7 @@ from typing import (
     List,
     Set,
 )
+from inflection import underscore
 from stringcase import pascalcase, snakecase
 from services import fetch_pull_request
 
@@ -67,7 +68,7 @@ def main():
     token = env['access_token']
     src_path = env['src_path']
     symbols = env["symbols"]
-    symbol_list = [snakecase(symbol) for symbol in symbols.split('\n')]
+    symbol_list = [underscore(symbol) for symbol in symbols.split('\n')]
     keywords = set(symbol_list)
     print(keywords)
     

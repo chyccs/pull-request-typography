@@ -17,6 +17,7 @@ setuptools = "*"
 wheel = "*"
 semgrep = "*"
 stringcase = "*"
+inflection = "*"
 
 [requires]
 python_version = "3.9"

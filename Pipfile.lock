@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "a8f4e6bfcc7c5638dc2658468569d1107de0a69778cd9c1b37519edfe535a03b"
+            "sha256": "c32f293f4143b2321fb6399ba6b2ea1ce9bc8a2654a5557ef46c9c8ca244013c"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -271,6 +271,14 @@
             "markers": "python_version >= '3.5'",
             "version": "==3.4"
         },
+        "inflection": {
+            "hashes": [
+                "sha256:1a29730d366e996aaacffb2f1f1cb9593dc38e2ddd30c91250c6dde09ea9b417",
+                "sha256:f38b2b640938a4f35ade69ac3d053042959b62a0f1076a5bbaa1b9526605a8a2"
+            ],
+            "index": "pypi",
+            "version": "==0.5.1"
+        },
         "jsonschema": {
             "hashes": [
                 "sha256:0f864437ab8b6076ba6707453ef8f98a6a0d512a80e93f8abdb676f737ecb60d",
@@ -453,6 +461,13 @@
             ],
             "index": "pypi",
             "version": "==67.1.0"
+        },
+        "stringcase": {
+            "hashes": [
+                "sha256:48a06980661908efe8d9d34eab2b6c13aefa2163b3ced26972902e3bdfd87008"
+            ],
+            "index": "pypi",
+            "version": "==1.2.0"
         },
         "tomli": {
             "hashes": [
@@ -912,13 +927,6 @@
             ],
             "index": "pypi",
             "version": "==67.1.0"
-        },
-        "stringcase": {
-            "hashes": [
-                "sha256:48a06980661908efe8d9d34eab2b6c13aefa2163b3ced26972902e3bdfd87008"
-            ],
-            "index": "pypi",
-            "version": "==1.2.0"
         },
         "testfixtures": {
             "hashes": [
