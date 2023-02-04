@@ -69,8 +69,9 @@ def main():
     symbols = env["symbols"]
     symbol_list = [underscore(symbol) for symbol in symbols.split('\n')]
     symbol_list.extend([dasherize(symbol) for symbol in symbol_list])
-    symbol_list.extend([humanize(symbol).lower() for symbol in symbol_list])
+    symbol_list.extend([humanize(symbol).lower().strip() for symbol in symbol_list])
     keywords = set(symbol_list)
+    keywords = sorted(keywords)
     print(keywords)
     
     pull_request = fetch_pull_request(
