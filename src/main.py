@@ -58,7 +58,7 @@ def __highlight(text: str, keywords: Set[str]):
     for k in keywords:
         try:
             highlighted = highlighted.replace(k, f'`{k}`')
-        except:
+        except ValueError:
             continue
     return highlighted
 
