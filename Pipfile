@@ -16,7 +16,6 @@ PyGithub = "==1.57"
 setuptools = "*"
 wheel = "*"
 semgrep = "*"
-stringcase = "*"
 inflection = "*"
 
 [requires]
