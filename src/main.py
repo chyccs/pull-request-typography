@@ -5,8 +5,7 @@ from typing import (
     List,
     Set,
 )
-from inflection import underscore
-from stringcase import pascalcase, snakecase
+from inflection import underscore, humanize, dasherize
 from services import fetch_pull_request
 
 TAG = [
@@ -69,6 +68,8 @@ def main():
     src_path = env['src_path']
     symbols = env["symbols"]
     symbol_list = [underscore(symbol) for symbol in symbols.split('\n')]
+    symbol_list.extend([dasherize(symbol) for symbol in symbol_list])
+    symbol_list.extend([humanize(symbol).lower() for symbol in symbol_list])
     keywords = set(symbol_list)
     print(keywords)
     
