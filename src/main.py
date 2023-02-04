@@ -97,10 +97,13 @@ def main():
     tag, plain_title = __parse_title(pull_request.title)
     plain_title = __decorate_number(plain_title)
     plain_title = __decorate_filename(plain_title, files)
-
+    
+    print(f'title: {tag}: {plain_title}')
     decorated_title = f'{tag}: {__highlight(plain_title, keywords)}'
     decorated_body = __highlight(pull_request.body, keywords)
-
+    print(f'decorated_title: {decorated_title}')
+    print(f'decorated_body: {decorated_body}')
+    
     pull_request.edit(
         title=decorated_title or pull_request.title,
         body=decorated_body or pull_request.body,
