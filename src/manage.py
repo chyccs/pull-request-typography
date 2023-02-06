@@ -5,7 +5,7 @@ from typing import (
     List,
     Set,
 )
-
+import keyword
 from inflection import (
     humanize,
     pluralize,
@@ -34,7 +34,7 @@ def __logging(level: str, title: str, message: str):
     print(f'::{level} file={frame.filename}, line={frame.lineno}, title={title}::{message}')
 
 
-def __can_process(title: str):
+def can_process(title: str):
     return title.lower().find('bump') < 0
 
 
@@ -84,9 +84,19 @@ def __extend_pluralize(symbols: List[str]):
     symbols.extend([pluralize(symbol) for symbol in symbols])
 
 
+def multiple_replace(dictionary, text):
+    regex = re.compile("(%s)" % "|".join(map(re.escape, dictionary.keys())))
+    String = lambda mo: dictionary[mo.string[mo.start():mo.end()]]
+    return regex.sub(String, text)
+
+
+def __humanize(symbol: str):
+    stopwords = keyword.kwlist
+    return re.sub(rf'\b({"|".join(stopwords)})\b', r'', humanize(symbol).lower().strip())
+
+
 def __symbolise(raw_symbols: str):
-    symbols = [humanize(symbol).lower().strip()
-               for symbol in raw_symbols.split('\n') if len(humanize(symbol).lower().strip()) > 3]
+    symbols = [__humanize(symbol)for symbol in raw_symbols.split('\n') if len(__humanize(symbol)) > 3]
     symbols.extend([symbol.replace(' ', '_') for symbol in symbols])
     return symbols
 
@@ -107,14 +117,14 @@ def main():
         number=int(env['pull_request_number']),
     )
 
-    if not __can_process(pull_request.title):
+    if not can_process(pull_request.title):
         return
 
     files = []
     for root, _, f_names in os.walk(env['src_path']):
         for f in f_names:
             file_path = os.path.join(root, f)
-            if file_path.startswith('./.venv'):
+            if file_path.startswith('./.'):
                 continue
             files.append(f)
 

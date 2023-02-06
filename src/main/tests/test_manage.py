@@ -1,6 +1,6 @@
 import unittest
 
-from manage import __can_process
+from manage import can_process
 
 
 class TestManage(unittest.TestCase):
@@ -20,7 +20,7 @@ class TestManage(unittest.TestCase):
         print('tearDown')
 
     def test_can_process(self):
-        self.assertTrue(__can_process(' title'))
+        self.assertTrue(can_process(' title'))
 
 
 if __name__ == '__main__':
