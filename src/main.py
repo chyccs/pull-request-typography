@@ -29,6 +29,10 @@ TAG = [
 ]
 
 
+def __logging(level:str, title:str, message:str):
+    print(f'::{level} file=src/main.py,title={title}::{message}')
+
+
 def __can_process(title: str):
     return title.lower().find('bump') < 0
 
@@ -63,10 +67,10 @@ def __highlight(text: str, keywords: Set[str]):
         try:
             highlighted = re.sub(rf'(?<!`)({k})(?!`)', r'`\1`', highlighted)
         except ValueError as ex:
-            print(ex)
+            __logging('error', f'value_error during highlighting keyword {k}', str(ex))
             continue
-        except Exception as e:
-            print(e)
+        except Exception as ex:
+            __logging('error', f'misc_error during highlighting keyword {k}', str(ex))
             continue
     return highlighted
 
@@ -93,6 +97,8 @@ def main():
 
     keywords = sorted(set(symbols), key=len, reverse=True)
 
+    __logging('info', 'keywords', str(keywords))
+    
     pull_request = fetch_pull_request(
         access_token=env['access_token'],
         owner=env['owner'],
