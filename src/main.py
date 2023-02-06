@@ -65,12 +65,9 @@ def __highlight(text: str, keywords: Set[str]):
     highlighted = text
     for k in keywords:
         try:
-            highlighted = re.sub(rf'(?<!`)({k})(?!`)', r'`\1`', highlighted)
-        except ValueError as ex:
-            __logging('error', f'value_error during highlighting keyword {k}', str(ex))
-            continue
+            highlighted = re.sub(rf'(?<!`)({re.escape(k)})(?!`)', r'`\1`', highlighted)
         except Exception as ex:
-            __logging('error', f'misc_error during highlighting keyword {k}', str(ex))
+            __logging('error', f'parsing error during highlighting keyword {k}', str(ex))
             continue
     return highlighted
 
@@ -86,6 +83,7 @@ def __extend_pluralize(symbols: List[str]):
 def __symbolise(raw_symbols: str):
     symbols = [humanize(symbol).lower().strip()
                for symbol in raw_symbols.split('\n') if len(humanize(symbol).lower().strip()) > 3]
+    
     symbols.extend([symbol.replace(' ', '_') for symbol in symbols])
     return symbols
 
