@@ -98,7 +98,7 @@ def main():
     keywords = sorted(set(symbols), key=len, reverse=True)
 
     __logging('info', 'keywords', str(keywords))
-    
+
     pull_request = fetch_pull_request(
         access_token=env['access_token'],
         owner=env['owner'],
