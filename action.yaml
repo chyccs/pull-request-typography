@@ -71,7 +71,7 @@ runs:
       if: ${{ inputs.with_unittest }} == 'true'
       run: |
         cd ${{ github.action_path }}
-        pipenv run python -m unittest ${{ env.local_action_path }}/src/manage.py
+        pipenv run python -m unittest ${{ env.local_action_path }}/src/main/manage.py
       shell: bash
 
     - name: Run manage.py
