@@ -1,6 +1,6 @@
 import unittest
 
-from main import can_process
+from manage import can_process
 
 
 class TestMain(unittest.TestCase):
