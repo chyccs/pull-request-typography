@@ -11,7 +11,7 @@ from inflection import (
     pluralize,
     singularize,
 )
-
+import inspect
 from main import fetch_pull_request
 
 TAG = [
@@ -30,7 +30,8 @@ TAG = [
 
 
 def __logging(level: str, title: str, message: str):
-    print(f'::{level} file=src/main.py,title={title}::{message}')
+    frame: inspect.FrameInfo = inspect.stack()[2][3]
+    print(f'::{level} file={frame.filename},line={frame.lineno},title={title}::{message}')
 
 
 def can_process(title: str):
@@ -86,7 +87,6 @@ def __extend_pluralize(symbols: List[str]):
 def __symbolise(raw_symbols: str):
     symbols = [humanize(symbol).lower().strip()
                for symbol in raw_symbols.split('\n') if len(humanize(symbol).lower().strip()) > 3]
-
     symbols.extend([symbol.replace(' ', '_') for symbol in symbols])
     return symbols
 
