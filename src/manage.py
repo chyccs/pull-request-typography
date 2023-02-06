@@ -1,3 +1,5 @@
+import inspect
+import keyword
 import os
 import re
 from os import environ as env
@@ -5,14 +7,15 @@ from typing import (
     List,
     Set,
 )
-import keyword
+
 from inflection import (
     humanize,
     pluralize,
     singularize,
 )
-import inspect
+
 from main import fetch_pull_request
+from main.constants import STOPWORDS
 
 TAG = [
     'build',
@@ -29,12 +32,12 @@ TAG = [
 ]
 
 
-def __logging(level: str, title: str, message: str):
+def _logging(level: str, title: str, message: str):
     frame: inspect.FrameInfo = inspect.stack()[2]
     print(f'::{level} file={frame.filename}, line={frame.lineno}, title={title}::{message}')
 
 
-def can_process(title: str):
+def _can_process(title: str):
     return title.lower().find('bump') < 0
 
 
@@ -42,16 +45,16 @@ def __can_relocate_words(title: str):
     return title.find(':') < 0
 
 
-def __decorate_number(title: str):
+def _decorate_number(title: str):
     return re.sub(r'(([`]*)([0-9]+[0-9\.\-%$,]*)([`]*))', r'`\3`', title)
 
 
-def __decorate_filename(title: str, files: List[str]):
+def _decorate_filename(title: str, files: List[str]):
     files_available = '|'.join(files)
     return re.sub(rf'([`]*)({files_available})([`]*)', r'`\2`', title)
 
 
-def __parse_title(title: str):
+def _parse_title(title: str):
     if __can_relocate_words(title):
         p = re.search(r'(.*)[(\[](.*)[)\]](.*)', title)
         plain_title = f'{p.group(1)}{p.group(3)}'
@@ -62,53 +65,50 @@ def __parse_title(title: str):
     return p.group(1).lower().strip(), p.group(2).lower().strip()
 
 
-def __highlight(text: str, keywords: Set[str]):
+def _highlight(text: str, keywords: Set[str]):
     highlighted = text
     for k in keywords:
         try:
             highlighted = re.sub(rf'(?<!`)({re.escape(k)})(?!`)', r'`\1`', highlighted)
         except re.error as ex:
-            __logging('error', f'regex error during highlighting keyword {k}', str(ex))
+            _logging('error', f'regex error during highlighting keyword {k}', str(ex))
             continue
         except Exception as ex:
-            __logging('error', f'misc error during highlighting keyword {k}', str(ex))
+            _logging('error', f'misc error during highlighting keyword {k}', str(ex))
             continue
     return highlighted
 
 
-def __extend_singularize(symbols: List[str]):
+def _extend_singularize(symbols: List[str]):
     symbols.extend([singularize(symbol) for symbol in symbols])
 
 
-def __extend_pluralize(symbols: List[str]):
+def _extend_pluralize(symbols: List[str]):
     symbols.extend([pluralize(symbol) for symbol in symbols])
 
 
-def multiple_replace(dictionary, text):
-    regex = re.compile("(%s)" % "|".join(map(re.escape, dictionary.keys())))
-    String = lambda mo: dictionary[mo.string[mo.start():mo.end()]]
-    return regex.sub(String, text)
+def _tokenize(symbol: str):
+    stopwords = list(keyword.kwlist)
+    stopwords.extend(STOPWORDS)
+    return (re
+            .sub(rf'\b({"|".join(stopwords)})\b', r'', humanize(symbol).lower().strip())
+            .lower().strip())
 
 
-def __humanize(symbol: str):
-    stopwords = keyword.kwlist
-    return re.sub(rf'\b({"|".join(stopwords)})\b', r'', humanize(symbol).lower().strip())
-
-
-def __symbolise(raw_symbols: str):
-    symbols = [__humanize(symbol)for symbol in raw_symbols.split('\n') if len(__humanize(symbol)) > 3]
+def _symbolise(raw_symbols: str):
+    symbols = [_tokenize(symbol)for symbol in raw_symbols.split('\n') if len(_tokenize(symbol)) > 3]
     symbols.extend([symbol.replace(' ', '_') for symbol in symbols])
     return symbols
 
 
 def main():
-    symbols = __symbolise(env["symbols"])
-    __extend_singularize(symbols)
-    __extend_pluralize(symbols)
+    symbols = _symbolise(env["symbols"])
+    _extend_singularize(symbols)
+    _extend_pluralize(symbols)
 
     keywords = sorted(set(symbols), key=len, reverse=True)
 
-    __logging('info', 'keywords', str(keywords))
+    _logging('info', 'keywords', str(keywords))
 
     pull_request = fetch_pull_request(
         access_token=env['access_token'],
@@ -117,7 +117,7 @@ def main():
         number=int(env['pull_request_number']),
     )
 
-    if not can_process(pull_request.title):
+    if not _can_process(pull_request.title):
         return
 
     files = []
@@ -128,12 +128,12 @@ def main():
                 continue
             files.append(f)
 
-    tag, plain_title = __parse_title(pull_request.title)
-    plain_title = __decorate_number(plain_title)
-    plain_title = __decorate_filename(plain_title, files)
+    tag, plain_title = _parse_title(pull_request.title)
+    plain_title = _decorate_number(plain_title)
+    plain_title = _decorate_filename(plain_title, files)
 
-    decorated_title = f'{tag}: {__highlight(plain_title, keywords)}'
-    decorated_body = __highlight(pull_request.body, keywords)
+    decorated_title = f'{tag}: {_highlight(plain_title, keywords)}'
+    decorated_body = _highlight(pull_request.body, keywords)
 
     pull_request.edit(
         title=decorated_title or pull_request.title,

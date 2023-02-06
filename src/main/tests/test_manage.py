@@ -1,6 +1,9 @@
 import unittest
 
-from manage import can_process
+from manage import (
+    _can_process,
+    _tokenize,
+)
 
 
 class TestManage(unittest.TestCase):
@@ -20,7 +23,10 @@ class TestManage(unittest.TestCase):
         print('tearDown')
 
     def test_can_process(self):
-        self.assertTrue(can_process(' title'))
+        self.assertTrue(_can_process(' title'))
+
+    def test_tokenize(self):
+        self.assertEqual(_tokenize('return title'), 'title')
 
 
 if __name__ == '__main__':
