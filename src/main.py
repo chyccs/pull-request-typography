@@ -29,7 +29,7 @@ TAG = [
 ]
 
 
-def __logging(level:str, title:str, message:str):
+def __logging(level: str, title: str, message: str):
     print(f'::{level} file=src/main.py,title={title}::{message}')
 
 
@@ -65,12 +65,12 @@ def __highlight(text: str, keywords: Set[str]):
     highlighted = text
     for k in keywords:
         try:
-            highlighted = re.sub(rf'(?<!`)({k})(?!`)', r'`\1`', highlighted)
-        except ValueError as ex:
-            __logging('error', f'value_error during highlighting keyword {k}', str(ex))
+            highlighted = re.sub(rf'(?<!`)({re.escape(k)})(?!`)', r'`\1`', highlighted)
+        except re.error as ex:
+            __logging('error', f'regex error during highlighting keyword {k}', str(ex))
             continue
         except Exception as ex:
-            __logging('error', f'misc_error during highlighting keyword {k}', str(ex))
+            __logging('error', f'misc error during highlighting keyword {k}', str(ex))
             continue
     return highlighted
 
@@ -86,6 +86,7 @@ def __extend_pluralize(symbols: List[str]):
 def __symbolise(raw_symbols: str):
     symbols = [humanize(symbol).lower().strip()
                for symbol in raw_symbols.split('\n') if len(humanize(symbol).lower().strip()) > 3]
+
     symbols.extend([symbol.replace(' ', '_') for symbol in symbols])
     return symbols
 
@@ -96,6 +97,9 @@ def main():
     __extend_pluralize(symbols)
 
     keywords = sorted(set(symbols), key=len, reverse=True)
+    keywords.append("self.request_body['pages'][0][param]s")
+    keywords.append("abc, def, yyy")
+    keywords.append("self.request_body['pages'][0][param-dev]")
 
     __logging('info', 'keywords', str(keywords))
 
