@@ -34,7 +34,7 @@ def __logging(level: str, title: str, message: str):
     print(f'::{level} file={frame.filename}, line={frame.lineno}, title={title}::{message}')
 
 
-def can_process(title: str):
+def __can_process(title: str):
     return title.lower().find('bump') < 0
 
 
@@ -107,7 +107,7 @@ def main():
         number=int(env['pull_request_number']),
     )
 
-    if not can_process(pull_request.title):
+    if not __can_process(pull_request.title):
         return
 
     files = []
