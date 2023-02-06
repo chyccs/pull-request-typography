@@ -65,6 +65,7 @@ def __highlight(text: str, keywords: Set[str]):
     highlighted = text
     for k in keywords:
         try:
+            __logging('info', 'parse', k)
             highlighted = re.sub(rf'(?<!`)({k})(?!`)', r'`\1`', highlighted)
             # highlighted = re.sub(rf'(?<!`)({re.escape(k)})(?!`)', r'`\1`', highlighted)
         except Exception as ex:
