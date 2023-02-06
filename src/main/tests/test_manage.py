@@ -27,7 +27,9 @@ class TestManage(unittest.TestCase):
 
     def test_tokenize(self):
         self.assertEqual(_tokenize('return title'), 'title')
-
+        self.assertEqual(_tokenize('TITLE'), 'title')
+        self.assertEqual(_tokenize('make_canvas'), 'make canvas')
+        self.assertEqual(_tokenize('makeCanvas'), 'make canvas')
 
 if __name__ == '__main__':
     runner = unittest.TextTestRunner()

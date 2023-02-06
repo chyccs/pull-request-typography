@@ -12,6 +12,7 @@ from inflection import (
     humanize,
     pluralize,
     singularize,
+    underscore,
 )
 
 from main import fetch_pull_request
@@ -91,18 +92,18 @@ def _tokenize(symbol: str):
     stopwords = list(keyword.kwlist)
     stopwords.extend(STOPWORDS)
     return (re
-            .sub(rf'\b({"|".join(stopwords)})\b', r'', humanize(symbol).lower().strip())
+            .sub(rf'\b({"|".join(stopwords)})\b', r'', humanize(underscore(symbol)).lower().strip())
             .lower().strip())
 
 
-def _symbolise(raw_symbols: str):
+def _symbolize(raw_symbols: str):
     symbols = [_tokenize(symbol)for symbol in raw_symbols.split('\n') if len(_tokenize(symbol)) > 3]
     symbols.extend([symbol.replace(' ', '_') for symbol in symbols])
     return symbols
 
 
 def main():
-    symbols = _symbolise(env["symbols"])
+    symbols = _symbolize(env["symbols"])
     _extend_singularize(symbols)
     _extend_pluralize(symbols)
 
