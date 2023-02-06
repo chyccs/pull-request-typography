@@ -3,7 +3,7 @@ import unittest
 from manage import can_process
 
 
-class TestMain(unittest.TestCase):
+class TestManage(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -17,7 +17,7 @@ class TestMain(unittest.TestCase):
         print('setUp')
 
     def tearDown(self):
-        print('tearDown\n')
+        print('tearDown')
 
     def test_can_process(self):
         self.assertTrue(can_process(' title'))
