@@ -31,7 +31,7 @@ TAG = [
 
 def __logging(level: str, title: str, message: str):
     frame: inspect.FrameInfo = inspect.stack()[2]
-    print(f'::{level} file={frame.filename},line={frame.lineno},title={title}::{message}')
+    print(f'::{level} file={frame.filename}, line={frame.lineno}, title={title}::{message}')
 
 
 def can_process(title: str):
@@ -97,9 +97,6 @@ def main():
     __extend_pluralize(symbols)
 
     keywords = sorted(set(symbols), key=len, reverse=True)
-    keywords.append("self.request_body['pages'][0][param]s")
-    keywords.append("abc, def, yyy")
-    keywords.append("self.request_body['pages'][0][param-dev]")
 
     __logging('info', 'keywords', str(keywords))
 
