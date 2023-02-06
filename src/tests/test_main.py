@@ -18,7 +18,7 @@ class TestMain(unittest.TestCase):
 
     def tearDown(self):
         print('tearDown\n')
-		
+
     def test_can_process(self):
         self.assertTrue(can_process('bump title'))
 
