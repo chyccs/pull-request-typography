@@ -62,7 +62,11 @@ def __highlight(text: str, keywords: Set[str]):
     for k in keywords:
         try:
             highlighted = re.sub(rf'(?<!`)({k})(?!`)', r'`\1`', highlighted)
-        except ValueError:
+        except ValueError as ex:
+            print(ex)
+            continue
+        except Exception as e:
+            print(e)
             continue
     return highlighted
 
