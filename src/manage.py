@@ -30,6 +30,8 @@ TAG = [
 
 
 def __logging(level: str, title: str, message: str):
+    fr = inspect.stack()[2]
+    print(fr)
     frame: inspect.FrameInfo = inspect.stack()[2][3]
     print(f'::{level} file={frame.filename},line={frame.lineno},title={title}::{message}')
 
