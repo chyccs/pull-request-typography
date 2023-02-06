@@ -94,7 +94,9 @@ def main():
     __extend_pluralize(symbols)
 
     keywords = sorted(set(symbols), key=len, reverse=True)
-
+    keywords.append("self.request_body['pages'][0][param]s")
+    keywords.append("abc, def, yyy")
+    
     __logging('info', 'keywords', str(keywords))
 
     pull_request = fetch_pull_request(
