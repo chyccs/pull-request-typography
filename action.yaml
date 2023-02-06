@@ -70,8 +70,8 @@ runs:
     - name: Run unittest
       if: ${{ inputs.with_unittest }} == 'true'
       run: |
-        cd ${{ github.action_path }}
-        pipenv run python -m unittest ${{ env.local_action_path }}/src/main/tests/test_manage.py
+        cd ${{ github.action_path }}/src
+        pipenv run python -m unittest main/tests/test_manage.py
       shell: bash
 
     - name: Run manage.py
