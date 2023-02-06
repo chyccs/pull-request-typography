@@ -1,6 +1,6 @@
 import unittest
 
-from src.main import can_process
+from main import can_process
 
 
 class TestMain(unittest.TestCase):
@@ -20,7 +20,7 @@ class TestMain(unittest.TestCase):
         print('tearDown\n')
 
     def test_can_process(self):
-        self.assertTrue(can_process('bump title'))
+        self.assertTrue(can_process(' title'))
 
 
 if __name__ == '__main__':

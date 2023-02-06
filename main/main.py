@@ -12,7 +12,6 @@ from inflection import (
     singularize,
 )
 
-from . import fetch_pull_request
 
 TAG = [
     'build',
