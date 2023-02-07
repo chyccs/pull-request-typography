@@ -7,7 +7,7 @@ name = "pypi"
 flake8 = "~=3.8"
 flake8-isort = "~=3.0"
 coverage = "~=7.0"
-mypy = "~=0.782"
+mypy = "~=1.0"
 autopep8 = "*"
 pre-commit = "*"
 
