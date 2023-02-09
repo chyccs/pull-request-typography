@@ -57,6 +57,7 @@ def _decorate_filename(title: str, files: List[str]):
 
 def _decorate_bump(title: str, ref_name: str):
     decorated = _decorate_number(title)
+    _logging('info', 'ref_name', ref_name)
     if match := re.search(r'dependabot\/\w+\/(\w+)\-[\.\d]+', ref_name):
         dep_name = match.group(1)
         decorated = _decorate_filename(decorated, [dep_name])
