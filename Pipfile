@@ -15,6 +15,7 @@ pre-commit = "*"
 PyGithub = "==1.57"
 semgrep = "*"
 inflection = "*"
+coverage = "*"
 
 [requires]
 python_version = "3.9"
