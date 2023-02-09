@@ -17,21 +17,31 @@
 ```
 
 
-### Bump dependabot pull request title
+### 🪄 Bump dependabot🤖 pull request title
 
 ##### AS-IS
-build(deps): bump semgrep from 1.9.0 to 1.10.0
+> build(deps): bump semgrep from 1.9.0 to 1.10.0
+
 ##### TO-BE
-build(deps): bump `semgrep` from `1.9.0` to `1.10.0`
+> build(deps): bump `semgrep` from `1.9.0` to `1.10.0`
 
 
-### Make conventional title on pull request and keyword highlights
+### 🗂 Make your pull-request to `conventional pull-request`
 
 ##### AS-IS
-(Feat)Extends Singularize And Pluralize Symbols On make_test.py
-##### TO-BE
-feat: extends `singularize` and `pluralize` symbols on `make_test.py`
+> (Feat)Extends Singularize And Pluralize Symbols
 
+##### TO-BE
+> feat: extends `singularize` and `pluralize` symbols
+
+
+### 🔦 Emphasize keywords
+
+##### AS-IS
+> Feat: Add make_test.py and resource files like en_us.res to achieve 100% testing
+
+##### TO-BE
+> feat: Add `make_test.py` and resource files like `en_us.res` to achieve `100%` testing
 
 ### Dependencies
 * https://github.com/returntocorp/semgrep
