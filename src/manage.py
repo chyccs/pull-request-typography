@@ -132,7 +132,7 @@ def main():
     tag, plain_title = _parse_title(pull_request.title)
 
     if _is_bump(plain_title):
-        decorated_title = f'{tag}: {_decorate_bump(plain_title, pull_request.head)}'
+        decorated_title = f'{tag}: {_decorate_bump(plain_title, pull_request.head.ref)}'
         decorated_body = pull_request.body
     else:
         files = []
