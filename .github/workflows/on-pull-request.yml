@@ -14,6 +14,7 @@ jobs:
     with:
       ref: ${{ github.ref }}
       base_ref: ${{ github.base_ref }}
+    secrets: inherit
 
   add_assignee:
     runs-on: ubuntu-latest
