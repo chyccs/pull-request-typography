@@ -143,7 +143,9 @@ def main():
                 if file_path.startswith('./.'):
                     continue
                 files.append(f)
-
+                
+        _logging('info', 'files', str(files))
+        
         plain_title = _decorate_number(plain_title)
         plain_title = _decorate_filename(plain_title, files)
 
