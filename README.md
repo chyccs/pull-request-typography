@@ -1,6 +1,8 @@
 # Pull-Request-Typography
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/34344560ee25623f7761/maintainability)](https://codeclimate.com/github/chyccs/pull-request-typography/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/34344560ee25623f7761/test_coverage)](https://codeclimate.com/github/chyccs/pull-request-typography/test_coverage)
+
 [![DeepSource](https://deepsource.io/gh/chyccs/pull-request-typography.svg/?label=active+issues&show_trend=true&token=9jw18ddlKbv2Gr9MKxFHrsLo)](https://deepsource.io/gh/chyccs/pull-request-typography/?ref=repository-badge)
 
 ### Usage
