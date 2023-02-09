@@ -80,7 +80,7 @@ def _highlight(text: str, keywords: Set[str]):
         try:
             _logging('info', f'keyword_{k}', re.escape(k))
             highlighted = re.sub(rf'\b(?<!`)({k})(?!`)\b', r'`\1`', highlighted)
-            _logging('info', f'highlighted', highlighted)
+            _logging('info', 'highlighted', highlighted)
         except re.error as ex:
             _logging('error', f'regex error during highlighting keyword {k}', str(ex))
             continue
@@ -96,6 +96,17 @@ def _extend_singularize(symbols: List[str]):
 
 def _extend_pluralize(symbols: List[str]):
     symbols.extend([pluralize(symbol) for symbol in symbols])
+
+
+def _extend_files(symbols: List[str], src_path: str):
+    files = []
+    for root, _, f_names in os.walk(src_path):
+        for f in f_names:
+            file_path = os.path.join(root, f)
+            if file_path.startswith('./.'):
+                continue
+            files.append(f)
+    symbols.extend(files)
 
 
 def _tokenize(symbol: str):
@@ -116,6 +127,7 @@ def main():
     symbols = _symbolize(env["symbols"])
     _extend_singularize(symbols)
     _extend_pluralize(symbols)
+    _extend_files(symbols, env["src_path"])
 
     keywords = sorted(set(symbols), key=len, reverse=True)
 
@@ -127,29 +139,16 @@ def main():
         repository=env['repository'],
         number=int(env['pull_request_number']),
     )
-    
+
     _logging('info', 'pull_request', str(pull_request))
-    
+
     tag, plain_title = _parse_title(pull_request.title)
 
     if _is_bump(plain_title):
         decorated_title = f'{tag}: {_decorate_bump(plain_title, pull_request.head.ref)}'
         decorated_body = pull_request.body
     else:
-        files = []
-        for root, _, f_names in os.walk(env['src_path']):
-            for f in f_names:
-                file_path = os.path.join(root, f)
-                if file_path.startswith('./.'):
-                    _logging('info', 'file_path', file_path)
-                    continue
-                files.append(f)
-                
-        
-        
         plain_title = _decorate_number(plain_title)
-        plain_title = _decorate_filename(plain_title, files)
-
         decorated_title = f'{tag}: {_highlight(plain_title, keywords)}'
         decorated_body = _highlight(pull_request.body, keywords)
 

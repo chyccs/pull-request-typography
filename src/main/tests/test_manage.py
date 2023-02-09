@@ -2,8 +2,8 @@ import unittest
 
 from manage import (
     _decorate_bump,
-    _tokenize,
     _highlight,
+    _tokenize,
 )
 
 
