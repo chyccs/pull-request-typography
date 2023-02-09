@@ -7,6 +7,12 @@ branding:
   color: 'red'
 
 inputs:
+
+  with_unittest:
+    description: 'run unittest before main code'
+    required: false
+    default: "true"
+
   src_path:
     description: 'Path of source code'
     required: true
@@ -61,11 +67,18 @@ runs:
         echo '\n' >> $GITHUB_ENV
       shell: bash
 
-    - name: Run main
+    - name: Run unittest
+      if: ${{ inputs.with_unittest }} == 'true'
+      run: |
+        cd ${{ github.action_path }}/src
+        pipenv run python -m unittest main/tests/test_manage.py
+      shell: bash
+
+    - name: Run manage.py
       id: main
       run: |
         cd ${{ github.action_path }}
-        pipenv run python ${{ env.local_action_path }}/src/main.py
+        pipenv run python ${{ env.local_action_path }}/src/manage.py
       shell: bash
       env:
         owner: ${{ github.repository_owner }}
