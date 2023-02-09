@@ -50,16 +50,12 @@ def _decorate_number(title: str):
     return re.sub(r'(([`]*)([0-9]+[0-9\.\-\%\$\,]*)([`]*))', r'`\3`', title)
 
 
-def _decorate_filename(title: str, files: List[str]):
-    files_available = '|'.join(files)
-    return re.sub(rf'([`]*)({files_available})([`]*)', r'`\2`', title)
-
-
 def _decorate_bump(title: str, ref_name: str):
     decorated = _decorate_number(title)
-    if (match := re.search(r'dependabot\/\w+\/(\w+)\-[\.\d]+', ref_name)):
+    match = re.search(r'dependabot\/\w+\/(\w+)\-[\.\d]+', ref_name)
+    if match:
         dep_name = match.group(1)
-        decorated = _decorate_filename(decorated, [dep_name])
+        decorated = _highlight(decorated, [dep_name])
     return decorated
 
 
