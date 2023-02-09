@@ -38,8 +38,8 @@ def _logging(level: str, title: str, message: str):
     print(f'::{level} file={frame.filename}, line={frame.lineno}, title={title}::{message}')
 
 
-def _can_process(title: str):
-    return title.lower().find('bump') < 0
+def _is_bump(title: str):
+    return title.lower().find('bump') >= 0
 
 
 def __can_relocate_words(title: str):
@@ -47,12 +47,20 @@ def __can_relocate_words(title: str):
 
 
 def _decorate_number(title: str):
-    return re.sub(r'(([`]*)([0-9]+[0-9\.\-%$,]*)([`]*))', r'`\3`', title)
+    return re.sub(r'(([`]*)([0-9]+[0-9\.\-\%\$\,]*)([`]*))', r'`\3`', title)
 
 
 def _decorate_filename(title: str, files: List[str]):
     files_available = '|'.join(files)
     return re.sub(rf'([`]*)({files_available})([`]*)', r'`\2`', title)
+
+
+def _decorate_bump(title: str, ref_name: str):
+    decorated = _decorate_number(title)
+    if match := re.search(r'dependabot\/\w+\/(\w+)\-[\.\d]+', ref_name):
+        dep_name = match.group(1)
+        decorated = _decorate_filename(decorated, [dep_name])
+    return decorated
 
 
 def _parse_title(title: str):
@@ -70,7 +78,7 @@ def _highlight(text: str, keywords: Set[str]):
     highlighted = text
     for k in keywords:
         try:
-            highlighted = re.sub(rf'(?<!`)({re.escape(k)})(?!`)', r'`\1`', highlighted)
+            highlighted = re.sub(rf'\b(?<!`)({re.escape(k)})(?!`)\b', r'`\1`', highlighted)
         except re.error as ex:
             _logging('error', f'regex error during highlighting keyword {k}', str(ex))
             continue
@@ -118,27 +126,29 @@ def main():
         number=int(env['pull_request_number']),
     )
 
-    if not _can_process(pull_request.title):
-        return
-
-    files = []
-    for root, _, f_names in os.walk(env['src_path']):
-        for f in f_names:
-            file_path = os.path.join(root, f)
-            if file_path.startswith('./.'):
-                continue
-            files.append(f)
-
     tag, plain_title = _parse_title(pull_request.title)
-    plain_title = _decorate_number(plain_title)
-    plain_title = _decorate_filename(plain_title, files)
 
-    decorated_title = f'{tag}: {_highlight(plain_title, keywords)}'
-    decorated_body = _highlight(pull_request.body, keywords)
+    if _is_bump(plain_title):
+        decorated_title = f'{tag}: {_decorate_bump(plain_title, pull_request.head)}'
+        decorated_body = pull_request.body
+    else:
+        files = []
+        for root, _, f_names in os.walk(env['src_path']):
+            for f in f_names:
+                file_path = os.path.join(root, f)
+                if file_path.startswith('./.'):
+                    continue
+                files.append(f)
+
+        plain_title = _decorate_number(plain_title)
+        plain_title = _decorate_filename(plain_title, files)
+
+        decorated_title = f'{tag}: {_highlight(plain_title, keywords)}'
+        decorated_body = _highlight(pull_request.body, keywords)
 
     pull_request.edit(
-        title=decorated_title or pull_request.title,
-        body=decorated_body or pull_request.body,
+        title=(decorated_title or pull_request.title),
+        body=(decorated_body or pull_request.body),
     )
 
 
