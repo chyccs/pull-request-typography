@@ -141,10 +141,11 @@ def main():
             for f in f_names:
                 file_path = os.path.join(root, f)
                 if file_path.startswith('./.'):
+                    _logging('info', 'file_path', file_path)
                     continue
                 files.append(f)
                 
-        _logging('info', 'files', str(files))
+        
         
         plain_title = _decorate_number(plain_title)
         plain_title = _decorate_filename(plain_title, files)
