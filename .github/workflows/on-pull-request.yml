@@ -9,70 +9,11 @@ permissions:
   pull-requests: write
 
 jobs:
-  summary:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          ref: ${{ github.ref }}
-          fetch-depth: 2
-      - id: step-changes
-        run: |
-          changes="$(git diff HEAD~1 HEAD --name-only)"
-          echo "changes: $changes"
-          changes="$(git diff HEAD~1 HEAD --name-only | grep -E 'Dockerfile|Pipfile|Pipfile.lock|.html$|.py' | wc -l)"
-          echo "wc: $changes"
-
   integration:
-    runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 2
-      matrix:
-        python-version: [3.9]
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
-          cache: 'pipenv'
-          cache-dependency-path: ./Pipfile.lock
-
-      - name: Install pipenv
-        run: |
-          python -m pip install --upgrade pipenv
-
-      - id: cache-pipenv
-        uses: actions/cache@v3
-        with:
-          path: ~/.local/share/virtualenvs
-          key: ${{ runner.os }}-on-pull-request-pipenv-${{ hashFiles('**/Pipfile.lock') }}
-
-      - name: Install dependencies
-        if: steps.cache-pipenv.outputs.cache-hit != 'true'
-        run: |
-          pipenv install --dev
-
-      - name: Lint
-        run: |
-          git fetch --depth 1 origin ${{ inputs.base_ref }}
-          pipenv run flake8 --append-config=setup.cfg
-          git diff --name-only origin/${{ github.base_ref }} | grep ".py" | xargs -r pipenv run pylint --rcfile=pylintrc
-          git diff --name-only origin/${{ github.base_ref }} | grep ".py" | xargs -r pipenv run mypy || pipenv run mypy
-
-      - name: Run unittest
-        run: |
-          cd src
-          pipenv run coverage run -m unittest main/tests/test_manage.py
-          pipenv run coverage xml
-
-      - name: Upload coverage to codeclimate
-        uses: paambaati/codeclimate-action@v3.2.0
-        env:
-          CC_TEST_REPORTER_ID: 7b607be9895623ed7e730ef52fb0369a9ee28a0519149fec47168b538a4ff3bb
-        with:
-          coverageLocations: ./src/coverage.xml:coverage.py
+    uses: ./.github/workflows/integration.yml
+    with:
+      ref: ${{ github.ref }}
+      base_ref: ${{ github.ref_name }}
 
   add_assignee:
     runs-on: ubuntu-latest
