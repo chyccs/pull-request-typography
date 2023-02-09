@@ -57,7 +57,6 @@ def _decorate_filename(title: str, files: List[str]):
 
 def _decorate_bump(title: str, ref_name: str):
     decorated = _decorate_number(title)
-    _logging('info', 'ref_name', ref_name)
     if match := re.search(r'dependabot\/\w+\/(\w+)\-[\.\d]+', ref_name):
         dep_name = match.group(1)
         decorated = _decorate_filename(decorated, [dep_name])
@@ -79,7 +78,9 @@ def _highlight(text: str, keywords: Set[str]):
     highlighted = text
     for k in keywords:
         try:
+            _logging('info', f'keyword_{k}', re.escape(k))
             highlighted = re.sub(rf'\b(?<!`)({re.escape(k)})(?!`)\b', r'`\1`', highlighted)
+            _logging('info', f'highlighted', highlighted)
         except re.error as ex:
             _logging('error', f'regex error during highlighting keyword {k}', str(ex))
             continue
