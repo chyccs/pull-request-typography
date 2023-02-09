@@ -78,9 +78,7 @@ def _highlight(text: str, keywords: Set[str]):
     highlighted = text
     for k in keywords:
         try:
-            _logging('info', f'keyword_{k}', re.escape(k))
             highlighted = re.sub(rf'\b(?<!`)({k})(?!`)\b', r'`\1`', highlighted)
-            _logging('info', 'highlighted', highlighted)
         except re.error as ex:
             _logging('error', f'regex error during highlighting keyword {k}', str(ex))
             continue
