@@ -35,7 +35,7 @@ TAG = [
 
 def _logging(level: str, title: str, message: str):
     frame: inspect.FrameInfo = inspect.stack()[2]
-    print(f'::{level} file={frame.filename}, line={frame.lineno}, title={title}::{message}')
+    print(f'::{level} title={title}::{message}, file={frame.filename}, line={frame.lineno}')
 
 
 def _is_bump(title: str):

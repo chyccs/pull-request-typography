@@ -3,6 +3,7 @@ import unittest
 from manage import (
     _decorate_bump,
     _tokenize,
+    _highlight,
 )
 
 
@@ -31,6 +32,26 @@ class TestManage(unittest.TestCase):
     def test_decorate_bump(self):
         self.assertEqual(_decorate_bump('build(deps-dev): bump mypy from 0.991 to 1.0.0',
                          'dependabot/pip/mypy-1.0.0'), 'build(deps-dev): bump `mypy` from `0.991` to `1.0.0`')
+
+    def test_highlight(self):
+        keywords = [
+            'update pull requests',
+            'update_pull_requests',
+            'update pull request',
+            'update_pull_request',
+            'fetch_pull_requests',
+            'fetch pull requests',
+            'fetch github repos',
+            'fetch_github_repos',
+            'fetch pull request',
+            'fetch_pull_request',
+            'fetch_github_repo',
+            'fetch github repo',
+            'stopwords',
+            'stopword',
+        ]
+        self.assertEqual(_highlight('feat: add testcases named test manage',
+                         keywords), 'feat: add testcases named test manage')
 
 
 if __name__ == '__main__':
