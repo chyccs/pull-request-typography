@@ -81,7 +81,7 @@ runs:
       env:
         CC_TEST_REPORTER_ID: 7b607be9895623ed7e730ef52fb0369a9ee28a0519149fec47168b538a4ff3bb
       with:
-        coverageLocations: ${{ github.action_path }}/src/coverage.xml:coverage.py
+        coverageLocations: ${{ env.local_action_path }}/src/coverage.xml:coverage.py
 
     - name: Run manage.py
       id: main
