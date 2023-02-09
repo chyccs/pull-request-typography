@@ -8,11 +8,6 @@ branding:
 
 inputs:
 
-  with_unittest:
-    description: 'run unittest before main code'
-    required: false
-    default: "true"
-
   src_path:
     description: 'Path of source code'
     required: true
@@ -66,22 +61,6 @@ runs:
         echo "$symbols" >> $GITHUB_ENV
         echo '\n' >> $GITHUB_ENV
       shell: bash
-
-    - name: Run unittest
-      if: ${{ inputs.with_unittest }} == 'true'
-      run: |
-        cd ${{ github.action_path }}/src
-        pipenv run coverage run -m unittest main/tests/test_manage.py
-        pipenv run coverage xml
-      shell: bash
-
-    - name: Upload coverage to codeclimate
-      uses: paambaati/codeclimate-action@v3.2.0
-      if: ${{ inputs.with_unittest }} == 'true'
-      env:
-        CC_TEST_REPORTER_ID: 7b607be9895623ed7e730ef52fb0369a9ee28a0519149fec47168b538a4ff3bb
-      with:
-        coverageLocations: ${{ env.local_action_path }}/src/coverage.xml:coverage.py
 
     - name: Run manage.py
       id: main
