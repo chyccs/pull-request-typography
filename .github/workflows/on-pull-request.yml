@@ -13,7 +13,7 @@ jobs:
     uses: ./.github/workflows/integration.yml
     with:
       ref: ${{ github.ref }}
-      base_ref: ${{ github.ref_name }}
+      base_ref: ${{ github.base_ref }}
 
   add_assignee:
     runs-on: ubuntu-latest
