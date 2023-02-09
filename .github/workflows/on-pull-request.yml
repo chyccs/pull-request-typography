@@ -1,0 +1,30 @@
+name: on-pull-request-action
+
+on:
+  pull_request:
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  integration:
+    uses: ./.github/workflows/integration.yml
+    with:
+      ref: ${{ github.ref }}
+      base_ref: ${{ github.base_ref }}
+
+  add_assignee:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: kentaro-m/auto-assign-action@v1.2.1
+        continue-on-error: true
+
+  label:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/labeler@v4
+      continue-on-error: true
+      with:
+        repo-token: "${{ secrets.GITHUB_TOKEN }}"

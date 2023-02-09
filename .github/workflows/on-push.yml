@@ -1,0 +1,21 @@
+name: 'on-push-action'
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: ${{ github.ref_name }}
+
+jobs:
+  integration:
+    uses: ./.github/workflows/integration.yml
+    with:
+      ref: ${{ github.ref }}
+      base_ref: ${{ github.ref_name }}

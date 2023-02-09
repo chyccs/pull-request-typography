@@ -8,11 +8,6 @@ branding:
 
 inputs:
 
-  with_unittest:
-    description: 'run unittest before main code'
-    required: false
-    default: "true"
-
   src_path:
     description: 'Path of source code'
     required: true
@@ -65,13 +60,6 @@ runs:
         symbols="$(pipenv run semgrep --config=${{ env.local_action_path }}/src/semgrep.yml ${{ inputs.src_path }} -q --vim | awk -F ':' '{ print $6 }')"
         echo "$symbols" >> $GITHUB_ENV
         echo '\n' >> $GITHUB_ENV
-      shell: bash
-
-    - name: Run unittest
-      if: ${{ inputs.with_unittest }} == 'true'
-      run: |
-        cd ${{ github.action_path }}/src
-        pipenv run python -m unittest main/tests/test_manage.py
       shell: bash
 
     - name: Run manage.py
