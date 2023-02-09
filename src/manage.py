@@ -126,7 +126,9 @@ def main():
         repository=env['repository'],
         number=int(env['pull_request_number']),
     )
-
+    
+    _logging('info', 'pull_request', str(pull_request))
+    
     tag, plain_title = _parse_title(pull_request.title)
 
     if _is_bump(plain_title):
