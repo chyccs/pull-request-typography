@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [dev-packages]
-pylint = "*"
+pylint = "==2.16.1"
 flake8 = "~=3.8"
 flake8-isort = "~=3.0"
 coverage = "~=7.0"
