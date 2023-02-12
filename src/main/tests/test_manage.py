@@ -3,6 +3,7 @@ import unittest
 from manage import (
     _decorate_bump,
     _highlight,
+    _parse_title,
     _tokenize,
 )
 
@@ -30,8 +31,10 @@ class TestManage(unittest.TestCase):
         self.assertEqual(_tokenize('makeCanvas'), 'make canvas')
 
     def test_decorate_bump(self):
-        self.assertEqual(_decorate_bump('build(deps-dev): bump mypy from 0.991 to 1.0.0',
-                         'dependabot/pip/mypy-1.0.0'), 'build(deps-dev): bump `mypy` from `0.991` to `1.0.0`')
+        self.assertEqual(_decorate_bump(
+            title='build(deps-dev): bump mypy from 0.991 to 1.0.0',
+            ref_name='dependabot/pip/mypy-1.0.0',
+        ), 'build(deps-dev): bump `mypy` from `0.991` to `1.0.0`')
 
     def test_highlight(self):
         keywords = [
@@ -50,8 +53,16 @@ class TestManage(unittest.TestCase):
             'stopwords',
             'stopword',
         ]
-        self.assertEqual(_highlight('feat: add testcases named test manage',
-                         keywords), 'feat: add testcases named test manage')
+        self.assertEqual(_highlight(
+            text='feat: add testcases named test manage',
+            keywords=keywords,
+        ), 'feat: add testcases named test manage')
+
+    def test_parse_title(self):
+        self.assertEqual(_parse_title(title='feat: add testcases named test manage'),
+                         ('feat', 'add testcases named test manage'))
+        self.assertEqual(_parse_title(title='(feat)add testcases named test manage'),
+                         ('feat', 'add testcases named test manage'))
 
 
 if __name__ == '__main__':

@@ -9,7 +9,7 @@ def fetch_github_repo(
     access_token: str,
     owner: str,
     repository: str,
-) -> Repository:
+) -> Repository.Repository:
     return Github(access_token).get_user(owner).get_repo(repository)
 
 

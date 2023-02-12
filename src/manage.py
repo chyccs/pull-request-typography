@@ -52,22 +52,24 @@ def _decorate_number(title: str):
 
 def _decorate_bump(title: str, ref_name: str):
     decorated = _decorate_number(title)
-    match = re.search(r'dependabot\/\w+\/(\w+)\-[\.\d]+', ref_name)
+    match = re.search(r'dependabot\/\w+\/([\w\-]+)\-[\.\d]+', ref_name)
     if match:
         dep_name = match.group(1)
-        decorated = _highlight(decorated, [dep_name])
+        decorated = _highlight(decorated, {dep_name})
     return decorated
 
 
 def _parse_title(title: str):
     if __can_relocate_words(title):
         p = re.search(r'(.*)[(\[](.*)[)\]](.*)', title)
+        if not p:
+            return (None, None)
         plain_title = f'{p.group(1)}{p.group(3)}'
         tag = p.group(2).lower().strip()
         return tag, plain_title
 
     p = re.search(r'(.*)[\:][ ]*(.*)', title)
-    return p.group(1).lower().strip(), p.group(2).lower().strip()
+    return (p.group(1).lower().strip(), p.group(2).lower().strip()) if p else (None, None)
 
 
 def _highlight(text: str, keywords: Set[str]):
