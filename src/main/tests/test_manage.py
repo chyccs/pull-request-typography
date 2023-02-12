@@ -3,6 +3,7 @@ import unittest
 from manage import (
     _decorate_bump,
     _highlight,
+    _parse_title,
     _tokenize,
 )
 
@@ -52,8 +53,14 @@ class TestManage(unittest.TestCase):
             'stopwords',
             'stopword',
         ]
-        self.assertEqual(_highlight('feat: add testcases named test manage',
-                         keywords), 'feat: add testcases named test manage')
+        self.assertEqual(_highlight(
+            text='feat: add testcases named test manage',
+            keywords=keywords,
+        ), 'feat: add testcases named test manage')
+
+    def test_parse_title(self):
+        self.assertEqual(_parse_title('feat: add testcases named test manage'), ('feat', 'add testcases named test manage'))
+        self.assertEqual(_parse_title('(feat)add testcases named test manage'), ('feat', 'add testcases named test manage'))
 
 
 if __name__ == '__main__':
