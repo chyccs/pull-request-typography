@@ -30,8 +30,10 @@ class TestManage(unittest.TestCase):
         self.assertEqual(_tokenize('makeCanvas'), 'make canvas')
 
     def test_decorate_bump(self):
-        self.assertEqual(_decorate_bump('build(deps-dev): bump mypy from 0.991 to 1.0.0',
-                         'dependabot/pip/mypy-1.0.0'), 'build(deps-dev): bump `mypy` from `0.991` to `1.0.0`')
+        self.assertEqual(_decorate_bump(
+            title='build(deps-dev): bump mypy from 0.991 to 1.0.0',
+            ref_name='dependabot/pip/mypy-1.0.0',
+        ), 'build(deps-dev): bump `mypy` from `0.991` to `1.0.0`')
 
     def test_highlight(self):
         keywords = [

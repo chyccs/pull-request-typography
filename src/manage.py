@@ -55,7 +55,7 @@ def _decorate_bump(title: str, ref_name: str):
     match = re.search(r'dependabot\/\w+\/([\w\-]+)\-[\.\d]+', ref_name)
     if match:
         dep_name = match.group(1)
-        decorated = _highlight(decorated, set(dep_name))
+        decorated = _highlight(decorated, {dep_name})
     return decorated
 
 
