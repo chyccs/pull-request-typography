@@ -59,8 +59,10 @@ class TestManage(unittest.TestCase):
         ), 'feat: add testcases named test manage')
 
     def test_parse_title(self):
-        self.assertEqual(_parse_title('feat: add testcases named test manage'), ('feat', 'add testcases named test manage'))
-        self.assertEqual(_parse_title('(feat)add testcases named test manage'), ('feat', 'add testcases named test manage'))
+        self.assertEqual(_parse_title(title='feat: add testcases named test manage'),
+                         ('feat', 'add testcases named test manage'))
+        self.assertEqual(_parse_title(title='(feat)add testcases named test manage'),
+                         ('feat', 'add testcases named test manage'))
 
 
 if __name__ == '__main__':
