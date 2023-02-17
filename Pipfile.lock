@@ -527,13 +527,13 @@
         },
         "semgrep": {
             "hashes": [
-                "sha256:8cbd43ce43b007835ba948b77ad19a0d067d30fa6af512785bffae47a5d5dc24",
-                "sha256:af810ebb63337e2152f7d16d56a011a092272a6d0a4373878483a30331a8a59c",
-                "sha256:e429f33e3ce568ffd6dbe07b1fa21e873740a1a804c1749c3b944e450bfbf2f3",
-                "sha256:f9a6b3fdee66386c0c90ec7734ad39557482a8db28bc84f058299c3b565290f2"
+                "sha256:3173a923b87b8949334e1c49f12605685c8cd090a0794ed9c18d939607dc8a82",
+                "sha256:3f693387ff49bfbafed6c4448ba0c7e0a8179ea60f5279ebb508bbb6cc0114ae",
+                "sha256:49ff1012fb39dddd845e1d121488b0627b23d67b572055b5bb141e4bcea60327",
+                "sha256:78b1bad2acaba9b97420395ed22177907f7e0852fe25cbb1df39c583c496373d"
             ],
             "index": "pypi",
-            "version": "==1.12.0"
+            "version": "==1.12.1"
         },
         "tomli": {
             "hashes": [
