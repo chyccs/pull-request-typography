@@ -63,7 +63,7 @@ def _parse_title(title: str):
     if __can_relocate_words(title):
         p = re.search(r'(.*)[(\[](.*)[)\]](.*)', title)
         if not p:
-            return (None, None)
+            return ('misc', title)
         plain_title = f'{p[1]}{p[3]}'
         tag = p[2].lower().strip()
         return tag, plain_title
