@@ -39,11 +39,11 @@ def _logging(level: str, title: str, message: str):
 
 
 def _is_bump(title: str):
-    return title.lower().find('bump') >= 0
+    return 'bump' in title.lower()
 
 
 def __can_relocate_words(title: str):
-    return title.find(':') < 0
+    return ':' not in title
 
 
 def _decorate_number(title: str):
@@ -54,7 +54,7 @@ def _decorate_bump(title: str, ref_name: str):
     decorated = _decorate_number(title)
     match = re.search(r'dependabot\/\w+\/([\w\-]+)\-[\.\d]+', ref_name)
     if match:
-        dep_name = match.group(1)
+        dep_name = match[1]
         decorated = _highlight(decorated, {dep_name})
     return decorated
 
@@ -63,13 +63,13 @@ def _parse_title(title: str):
     if __can_relocate_words(title):
         p = re.search(r'(.*)[(\[](.*)[)\]](.*)', title)
         if not p:
-            return (None, None)
-        plain_title = f'{p.group(1)}{p.group(3)}'
-        tag = p.group(2).lower().strip()
+            return ('misc', title)
+        plain_title = f'{p[1]}{p[3]}'
+        tag = p[2].lower().strip()
         return tag, plain_title
 
     p = re.search(r'(.*)[\:][ ]*(.*)', title)
-    return (p.group(1).lower().strip(), p.group(2).lower().strip()) if p else (None, None)
+    return (p[1].lower().strip(), p[2].lower().strip()) if p else (None, None)
 
 
 def _highlight(text: str, keywords: Set[str]):
