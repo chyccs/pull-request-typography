@@ -43,7 +43,7 @@ def _is_bump(title: str):
 
 
 def __can_relocate_words(title: str):
-    return title.find(':') < 0
+    return ':' not in title
 
 
 def _decorate_number(title: str):
