@@ -13,7 +13,7 @@ autopep8 = "*"
 pre-commit = "*"
 
 [packages]
-PyGithub = "==1.57"
+PyGithub = "==1.58.0"
 semgrep = "*"
 inflection = "*"
 coverage = "*"
