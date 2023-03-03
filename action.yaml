@@ -28,7 +28,7 @@ runs:
     - name: Check Variables
       if: contains(fromJSON('["python", "csharp"]'), inputs.language) != true
       run: |
-        echo "::error::Invalid language"
+        echo "::error::${{ inputs.language }} is not supported language"
         exit 1
       shell: bash
 
