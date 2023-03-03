@@ -67,8 +67,9 @@ runs:
     - name: Search symbol
       run: |
         cd ${{ github.action_path }}
+        LANGUAGE="$(echo ${{ inputs.language }} | tr '[:lower:]')"
         echo 'symbols<<\n' >> $GITHUB_ENV
-        symbols="$(pipenv run semgrep --config=${{ env.local_action_path }}/src/rules/${{ inputs.language }}.yml ${{ inputs.src_path }} -q --vim | awk -F ':' '{ print $6 }')"
+        symbols="$(pipenv run semgrep --config=${{ env.local_action_path }}/src/rules/$LANGUAGE.yml ${{ inputs.src_path }} -q --vim | awk -F ':' '{ print $6 }')"
         echo "$symbols" >> $GITHUB_ENV
         echo '\n' >> $GITHUB_ENV
       shell: bash
