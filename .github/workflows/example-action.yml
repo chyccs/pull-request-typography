@@ -21,5 +21,6 @@ jobs:
         # or use a released GitHub Action
         #uses: chyccs/pull-request-typography@master
         with:
+          language: python
           src_path: "./src/**/*.py"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
