@@ -12,10 +12,12 @@
     uses: chyccs/pull-request-typography@master
     continue-on-error: true
     with:
+        language: python
         src_path: ${{ github.workspace }}
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
 
+You can skip to set language variable if same as github detection
 
 ### 🪄 Bump dependabot🤖 pull request title
 

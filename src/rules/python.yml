@@ -1,5 +1,5 @@
 rules:
-  - id: fetch-symbol
+  - id: python
     languages:
       - python
     pattern-either:
