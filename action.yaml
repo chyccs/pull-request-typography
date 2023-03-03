@@ -31,7 +31,7 @@ runs:
         echo "::error::Invalid language"
         exit 1
       shell: bash
-    
+
     - name: Move to path of action
       run: |
         cd ${{ github.action_path }}
