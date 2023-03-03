@@ -10,7 +10,7 @@ inputs:
   language:
     description: 'language'
     required: true
-    default: "python"
+    default: ${{ github.event.pull_request.head.repo.language }}
 
   src_path:
     description: 'Path of source code'
