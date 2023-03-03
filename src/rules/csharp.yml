@@ -1,18 +1,26 @@
 rules:
   - id: csharp
     languages:
-      - csharp
-    pattern-either:
-      - pattern: |
-            ... class $CMD
-            {
-                ...
-            }
-      - pattern: |
-            ... $CMD(...)
-            {
-                ...
-            }
-      - pattern: ... $CMD = ...;
-    message: $CMD
+      - C#
+    patterns:
+      - pattern-either:
+          - pattern: class $SYMBOL{ ... }
+          - pattern-either:
+            - pattern: public $TYPE $SYMBOL;
+            - pattern: public $TYPE $SYMBOL { ... get {} ... }
+            - pattern: public $TYPE $SYMBOL { ... set {} ... }
+            - pattern-inside: |
+                class $CLASS{ ...
+
+    message: $SYMBOL
+    severity: INFO
+
+  - id: regex
+    languages:
+      - C#
+    patterns:
+      - pattern-either:
+          - pattern-regex: enum ([a-zA-Z_-]+)([ ]?)$
+          - pattern-regex: enum (.*)([ ]?)\{
+    message: $1
     severity: INFO

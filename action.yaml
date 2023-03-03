@@ -28,7 +28,7 @@ runs:
     - name: Check Variables
       if: contains(fromJSON('["python", "csharp"]'), inputs.language) != true
       run: |
-        echo "::error::Invalid language"
+        echo "::error::${{ inputs.language }} is not supported language"
         exit 1
       shell: bash
 
@@ -69,7 +69,7 @@ runs:
         cd ${{ github.action_path }}
         LANGUAGE="$(echo ${{ inputs.language }} | tr '[:upper:]' '[:lower:]')"
         echo 'symbols<<\n' >> $GITHUB_ENV
-        symbols="$(pipenv run semgrep --config=${{ env.local_action_path }}/src/rules/$LANGUAGE.yml ${{ inputs.src_path }} -q --vim | awk -F ':' '{ print $6 }')"
+        symbols="$(pipenv run semgrep --config=${{ env.local_action_path }}/src/rules/$LANGUAGE.yml ${{ inputs.src_path }} -q --vim | awk -F ':' '{ print $6 }' | sort | uniq)"
         echo "$symbols" >> $GITHUB_ENV
         echo '\n' >> $GITHUB_ENV
       shell: bash
