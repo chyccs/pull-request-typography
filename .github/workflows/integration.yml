@@ -50,8 +50,8 @@ jobs:
         run: |
           git fetch --depth 1 origin ${{ inputs.base_ref }}
           pipenv run flake8 --append-config=setup.cfg
-          git diff --name-only origin/${{ inputs.base_ref }} | grep ".py" | xargs -r pipenv run pylint --rcfile=pylintrc
-          git diff --name-only origin/${{ inputs.base_ref }} | grep ".py" | xargs -r pipenv run mypy || pipenv run mypy
+          git diff --name-only origin/${{ inputs.base_ref }} | grep '\.py$' | xargs -r pipenv run pylint --rcfile=pylintrc
+          git diff --name-only origin/${{ inputs.base_ref }} | grep '\.py$' | xargs -r pipenv run mypy || pipenv run mypy
 
       - name: Run unittest
         run: |
