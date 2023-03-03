@@ -1,0 +1,18 @@
+rules:
+  - id: csharp
+    languages:
+      - csharp
+    pattern-either:
+      - pattern: |
+            ... class $CMD
+            {
+                ...
+            }
+      - pattern: |
+            ... $CMD(...)
+            {
+                ...
+            }
+      - pattern: ... $CMD = ...;
+    message: $CMD
+    severity: INFO

@@ -14,7 +14,7 @@ pre-commit = "*"
 
 [packages]
 PyGithub = "==1.58.0"
-semgrep = "*"
+semgrep = "~=1.14.0"
 inflection = "*"
 coverage = "*"
 

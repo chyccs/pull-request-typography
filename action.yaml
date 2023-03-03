@@ -7,6 +7,10 @@ branding:
   color: 'red'
 
 inputs:
+  language:
+    description: 'language'
+    required: true
+    default: "python"
 
   src_path:
     description: 'Path of source code'
@@ -21,6 +25,13 @@ inputs:
 runs:
   using: 'composite'
   steps:
+    - name: Check Variables
+      if: contains(fromJSON('["python", "csharp"]'), env.language) != 'true'
+      run: |
+        echo "::error::Invalid language"
+        exit 1
+      shell: bash
+    
     - name: Move to path of action
       run: |
         cd ${{ github.action_path }}
@@ -57,7 +68,7 @@ runs:
       run: |
         cd ${{ github.action_path }}
         echo 'symbols<<\n' >> $GITHUB_ENV
-        symbols="$(pipenv run semgrep --config=${{ env.local_action_path }}/src/semgrep.yml ${{ inputs.src_path }} -q --vim | awk -F ':' '{ print $6 }')"
+        symbols="$(pipenv run semgrep --config=${{ env.local_action_path }}/src/rules/${{ inputs.language }}.yml ${{ inputs.src_path }} -q --vim | awk -F ':' '{ print $6 }')"
         echo "$symbols" >> $GITHUB_ENV
         echo '\n' >> $GITHUB_ENV
       shell: bash
