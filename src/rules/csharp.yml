@@ -14,7 +14,7 @@ rules:
 
     message: $SYMBOL
     severity: INFO
-  
+
   - id: regex
     languages:
       - C#
