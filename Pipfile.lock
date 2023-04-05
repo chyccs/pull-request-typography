@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "ed3bfcf35e42e546b676618b92af6c4e3d810732c98db29c6c0b99dc4e06f198"
+            "sha256": "9bac1edd7c6ca2b62d961759012f41421e4882fc1e8dd22167fa88eebedf1263"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -544,13 +544,13 @@
         },
         "semgrep": {
             "hashes": [
-                "sha256:397f1ede96a66532922525663efba27be9f63ff0370182865ff7df1ab9edac9e",
-                "sha256:7b1f0a037849fda5d80c06ab36bf6b5c427d975b211d10c4c7c7fe1a7927d597",
-                "sha256:83fafcea96100ab1051c153ae0b144dc9a73f5f1cc2cc8bd11d486b4e9688271",
-                "sha256:a480a880cee2953e68ae828726399d1aaabffe3489219e30af609ccc72e8ed2d"
+                "sha256:078f021fe8a85f9d13a6b70811311b3ac3c28967fbf69dbe0b35ecfa0153b09d",
+                "sha256:16e728dee77a3090419afc5fd626e15c1dcb5564e80824fe19d3fdaaa9fede8c",
+                "sha256:55e65a897662615f4d4d8f0a754c952d81707ea0fc7a663fdfac40e43bf8f026",
+                "sha256:71688b9c8e5817798b33d23c6bd28608bc8e06b59008d0bb203aa7e39e0dbae7"
             ],
             "index": "pypi",
-            "version": "==1.16.0"
+            "version": "==1.17.0"
         },
         "tomli": {
             "hashes": [
