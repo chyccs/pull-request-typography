@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "06185ed6cd066cb6954af08f43f129058b5dab5e8203b24f51973738c06dae17"
+            "sha256": "a0c1bf98703ddf48e810568dc8072898557687e043f9bccad1952ed1676af694"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -395,11 +395,11 @@
         },
         "pygithub": {
             "hashes": [
-                "sha256:4e7fe9c3ec30d5fde5b4fbb97f18821c9dbf372bf6df337fe66f6689a65e0a83",
-                "sha256:7d528b4ad92bc13122129fafd444ce3d04c47d2d801f6446b6e6ee2d410235b3"
+                "sha256:1e6b1b7afe31f75151fb81f7ab6b984a7188a852bdb123dbb9ae90023c3ce60f",
+                "sha256:f435884af617c6debaa76cbc355372d1027445a56fbc39972a3b9ed4968badc8"
             ],
             "index": "pypi",
-            "version": "==1.58.1"
+            "version": "==1.58.2"
         },
         "pygments": {
             "hashes": [
@@ -414,11 +414,11 @@
                 "crypto"
             ],
             "hashes": [
-                "sha256:69285c7e31fc44f68a1feb309e948e0df53259d579295e6cfe2b1792329f05fd",
-                "sha256:d83c3d892a77bbb74d3e1a2cfa90afaadb60945205d1095d9221f04466f64c14"
+                "sha256:ba2b425b15ad5ef12f200dc67dd56af4e26de2331f965c5439994dad075876e1",
+                "sha256:bd6ca4a3c4285c1a2d4349e5a035fdf8fb94e04ccd0fcbe6ba289dae9cc3e074"
             ],
             "markers": "python_version >= '3.7'",
-            "version": "==2.6.0"
+            "version": "==2.7.0"
         },
         "pynacl": {
             "hashes": [
@@ -494,11 +494,11 @@
         },
         "ruamel.yaml": {
             "hashes": [
-                "sha256:90e398ee24524ebe20fc48cd1861cedd25520457b9a36cfb548613e57fde30a0",
-                "sha256:f251bd9096207af604af69d6495c3c650a3338d0493d27b04bc55477d7a884ed"
+                "sha256:25d0ee82a0a9a6f44683dcf8c282340def4074a4562f3a24f55695bb254c1693",
+                "sha256:baa2d0a5aad2034826c439ce61c142c07082b76f4791d54145e131206e998059"
             ],
             "markers": "python_version >= '3'",
-            "version": "==0.17.24"
+            "version": "==0.17.26"
         },
         "ruamel.yaml.clib": {
             "hashes": [
@@ -740,11 +740,11 @@
     "develop": {
         "astroid": {
             "hashes": [
-                "sha256:a1b8543ef9d36ea777194bc9b17f5f8678d2c56ee6a45b2c2f17eec96f242347",
-                "sha256:c81e1c7fbac615037744d067a9bb5f9aeb655edf59b63ee8b59585475d6f80d8"
+                "sha256:078e5212f9885fa85fbb0cf0101978a336190aadea6e13305409d099f71b2324",
+                "sha256:1039262575027b441137ab4a62a793a9b43defb42c32d5670f38686207cd780f"
             ],
             "markers": "python_full_version >= '3.7.2'",
-            "version": "==2.15.4"
+            "version": "==2.15.5"
         },
         "autopep8": {
             "hashes": [
@@ -968,19 +968,19 @@
         },
         "nodeenv": {
             "hashes": [
-                "sha256:27083a7b96a25f2f5e1d8cb4b6317ee8aeda3bdd121394e5ac54e498028a042e",
-                "sha256:e0e7f7dfb85fc5394c6fe1e8fa98131a2473e04311a45afb6508f7cf1836fa2b"
+                "sha256:d51e0c37e64fbf47d017feac3145cdbb58836d7eee8c6f6d3b6880c5456227d2",
+                "sha256:df865724bb3c3adc86b3876fa209771517b0cfe596beff01a92700e0e8be4cec"
             ],
             "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6'",
-            "version": "==1.7.0"
+            "version": "==1.8.0"
         },
         "platformdirs": {
             "hashes": [
-                "sha256:47692bc24c1958e8b0f13dd727307cff1db103fca36399f457da8e05f222fdc4",
-                "sha256:7954a68d0ba23558d753f73437c55f89027cf8f5108c19844d4b82e5af396335"
+                "sha256:412dae91f52a6f84830f39a8078cecd0e866cb72294a5c66808e74d5e88d251f",
+                "sha256:e2378146f1964972c03c085bb5662ae80b2b8c06226c54b2ff4aa9483e8a13a5"
             ],
             "markers": "python_version >= '3.7'",
-            "version": "==3.5.0"
+            "version": "==3.5.1"
         },
         "pre-commit": {
             "hashes": [
